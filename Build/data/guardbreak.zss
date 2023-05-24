@@ -1,0 +1,152 @@
+# Guard Break code adopted from Shiyo Kakuge's add004
+#===============================================================================
+# StateGuardBreakHit
+#===============================================================================
+[StateDef 5400; type: U; physics: U; velSet: 0, 0; ctrl: 0;]
+
+if !guardBreak {
+	guardBreakSet{value: 1}
+}
+
+if time = 0 {
+	playSnd{value: F5400, 0}
+	explod{
+		anim: F const(FxGuardBreakShockwave);
+		posType: p1;
+		pos: floor((const(size.mid.pos.x)) * const(size.xscale)), floor(const(size.mid.pos.y) * const(size.yscale) * ifElse(stateType = C, 0.5, 1));
+		sprPriority: 7;
+		ownPal: 1;
+		scale: 0.15, 4.5;
+		trans: add;
+		alpha: 256, 256;
+		pauseMoveTime: -1;
+		ignoreHitPause: 1;
+	}
+}
+
+if time < 13 {
+	explod{
+		anim: F const(FxGuardBreakSpark) + rand(0, 2);
+		posType: p1;
+		pos: floor((const(size.mid.pos.x)) * const(size.xscale)), floor(const(size.mid.pos.y) * const(size.yscale) * ifElse(stateType = C, 0.5, 1));
+		sprPriority: 6;
+		ownPal: 1;
+		random: floor(const(size.height) / 8 * const(size.xscale)), floor(const(size.height) * const(size.yscale));
+		scale: rand(0, 8) * 0.03 + 0.25, rand(0, 8) * 0.03 + 0.25;
+		vel: -(rand(0, 17) + 5) * 0.36, (rand(0, 18) - 8) * 0.36;
+		accel: 0.038, 0;
+		facing: ifElse(Random < 500, 1, -1);
+		vfacing: ifElse(Random < 500, 1, -1);
+		pauseMoveTime: -1;
+		ignoreHitPause: 1;
+	}
+}
+
+persistent(0) if time = 0 {
+	explod{
+		anim: F const(FxBackgroundColor);
+		sprPriority: -6000;
+		space: screen;
+		posType: left;
+		pos: 0, screenHeight / 2; # color 0 (blue)
+		scale: 320, 7.5 * screenHeight / const240p(240);
+		bindTime: -1;
+		superMoveTime: -1;
+		pauseMoveTime: -1;
+		ownPal: 1;
+		ignoreHitPause: 1;
+	}
+	pause{time: 13; movetime: 13}
+	stateTypeSet{physics: stateType}
+	if stateType = S {
+		changeAnim{value: const(AnimStandOrAirHitHigh_hard)}
+	} else if stateType = C {
+		changeAnim{value: const(AnimCrouchHit_hard)}
+	} else {
+		changeAnim{value: const(AnimStandOrAirHitLow_hard)}
+	}
+}
+
+if (time > 13 && animTime = 0) || time > 36 {
+	selfState{value: const(StateGuardBreakRecover)}
+}
+
+#===============================================================================
+# StateGuardBreakRecover
+#===============================================================================
+[StateDef 5401; type: U; physics: U; velSet: 0, 0; ctrl: 0;]
+
+if stateType = A {
+	velAdd{y: const(movement.yaccel)}
+	if pos y >= 0 && vel y > 0 {
+		velSet{y: 0}
+		posSet{y: 0}
+	}
+}
+
+if time = 0 {
+	stateTypeSet{physics: stateType}
+	if stateType = S {
+		changeAnim{value: const(AnimStandRecoverHigh_hard)}
+	} else if stateType = C {
+		changeAnim{value: const(AnimCrouchRecover_hard)}
+	} else {
+		changeAnim{value: const(AnimStandRecoverLow_hard)}
+	}
+}
+
+if time <= 80 {
+	changeAnim{value: Anim}
+	if (time % 2) = 0 {
+		if (time % 4) {
+			offset{x: -const240p(1)}
+		} else {
+			offset{x: 1}
+		}
+	}
+}
+
+if animTime = 0 || time > 99 {
+	if stateType = S {
+		selfState{value: const(StateStand); ctrl: 1}
+	} else {
+		selfState{value: const(StateCrouching); ctrl: 1}
+	}
+}
+
+#===============================================================================
+# Global states
+#===============================================================================
+[StateDef -2]
+
+if !const(Default.Enable.GuardBreak) || isHelper || teamSide = 0 {
+	# do nothing, global code disabled locally or executed by helper/stage
+} else if roundState = 0 {
+	guardPointsSet{value: guardPointsMax}
+	mapSet{map: "_iksys_guardPointsCounter"; value: 0}
+	mapSet{map: "_iksys_guardReceivedDamage"; value: 0}
+} else if roundState = 2 && alive {
+	ignoreHitPause if stateNo = const(StateStandGuardHit_shaking) || stateNo = const(StateCrouchGuardHit_shaking) || stateNo = const(StateAirGuardHit_shaking) {
+		mapSet{map: "_iksys_guardPointsCounter"; value: 60}
+		if (gameTime % 5) = 0 && float(guardPoints) / guardPointsMax <= 0.2 {
+			palFx{time: 2; add: 200, 0, 0}
+		}
+		ignoreHitPause if guardPoints = 0 && !guardBreak {
+			changeState{value: const(StateGuardBreakHit)}
+		}
+	} else if map(_iksys_guardPointsCounter) > 0 && moveType != H && getHitVar(isbound) = 0 && !standby {
+		mapAdd{map: "_iksys_guardPointsCounter"; value: -1}
+	}
+	ignoreHitPause if guardBreak && stateNo != [const(StateGuardBreakHit), const(StateGuardBreakRecover)] {
+		guardPointsSet{value: guardPointsMax}
+		guardBreakSet{value: 0}
+	}
+	if !guardBreak && guardPoints < guardPointsMax && map(_iksys_guardPointsCounter) = 0 {
+		guardPointsAdd{value: round(float(guardPointsMax) / 25, 0)} # guard points recovery
+		mapSet{map: "_iksys_guardPointsCounter"; value: 30}
+	}
+	if receivedDamage != map(_iksys_guardReceivedDamage) {
+		mapSet{map: "_iksys_guardReceivedDamage"; value: receivedDamage}
+		mapSet{map: "_iksys_guardPointsCounter"; value: 60}
+	}
+}

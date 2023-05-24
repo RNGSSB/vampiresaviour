@@ -1,0 +1,289 @@
+[Function Combo() ret]
+let ret = 0;
+if (stateType != A && ctrl) ||
+	((stateNo = [200, 299] || stateNo = [400, 499]) && stateNo != 440 && moveContact) || #!= 440: Except for sweep kick
+	(stateNo = 1310 || stateNo = 1330) { #From blocking
+	let ret = 1;
+}
+
+#===============================================================================
+# command code
+#===============================================================================
+[StateDef -1]
+
+#============|IF roundState = 2|================================================
+if roundState = 2 && !aiLevelF { #prevent attacks outside of fight state
+
+let canCombo = call Combo();
+ignoreHitPause{mapSet{map:"canCombo"; value: $canCombo}}
+
+#-------------------------------------------------------------------------------
+#Triple Kung Fu Palm (uses one super bar)
+if command = "TripleKFPalm" && power >= 1000 && stateType != A &&
+	(ctrl ||
+		(hitDefAttr = SC, NA, SA, HA && stateNo != [3050, 3100] && moveContact) ||
+		(stateNo = 1310 || stateNo = 1330)) { #From blocking
+	changeState{value: 3000}
+}
+
+#-------------------------------------------------------------------------------
+#Light Kung Fu Palm
+if command = "QCF_x" && $canCombo {
+	changeState{value: 1000}
+}
+
+#-------------------------------------------------------------------------------
+#Strong Kung Fu Palm
+if command = "QCF_y" && $canCombo {
+	changeState{value: 1010}
+}
+
+
+#-------------------------------------------------------------------------------
+#Run Fwd
+if (command = "FF" || Map(z) && command != "holdback") && stateType != A && ctrl && stateNo != 100 {
+	changeState{value: 100}
+}
+
+#-------------------------------------------------------------------------------
+#Run Back
+if (command = "BB" || Map(z) && command = "holdback" ) && stateType = S && ctrl {
+	changeState{value: 105}
+}
+
+#-------------------------------------------------------------------------------
+#Kung Fu Throw
+if map(xy) && stateType = S && (ctrl || (stateNo >= 200 && stateNo <= 440 && time < 4)){
+	changeState{value: 800}
+}
+
+#===============================================================================
+#Air Dash Resource Reset
+if stateType = S || stateType = C {
+mapSet{map:"airJumpCount"; value: 1}
+mapSet{map: "airDashAttackBuffer"; value: 0}
+mapSet{map: "airDashMacroBuffer"; value: 0}
+sysVar(1) := 0;
+}
+
+#Jump
+if stateNo = 200 || stateNo = 210 || stateNo = 230 || stateNo = 240 || stateNo = 400 || stateNo = 410 || stateNo = 430 || stateNo = 440
+|| stateNo = 600 || stateNo = 610 || stateNo = 630 || stateNo = 640{
+call JumpCancel();
+}
+#Air Jump
+if stateType = A && ctrl && map(airJumpCount) > 0 && map(airJumpInput) != 1{
+	if command = "holdup" {
+		changeState{value: 46}
+	}
+}
+
+#Has pressed up for ground jump
+if stateNo = 40 {
+	if command = "up" || command = "holdup"  {
+		mapSet{map:"airJumpInput"; value: 1}
+	}
+	else{
+		mapSet{map:"airJumpInput"; value: 0}
+	}
+}
+
+#Has stopped pressing any up direction while jumping
+if stateType = A && ctrl{
+	if (command = "release_up"|| command = "release_upfwd" || command = "release_upback") && command != "holdup"   {
+		mapSet{map:"airJumpInput"; value: 0}
+	}
+}
+
+#Air Dash Forward
+if ((Map(FF) || command = "holdfwd" && Map(z)|| command != "holdfwd" && Map(z)) && facing = 1 || (Map(FF) || command = "holdback" && Map(b)|| command != "holdback" && Map(z)) && facing = -1) 
+&& command != "holdback" && stateType = A && ctrl && map(airJumpCount) != 0 && command != "holddown" {
+	if pos Y < -50 && vel y < 0 || vel y > 0{
+		changeState{value: 110}
+	}
+}
+
+#Air Dash Back
+if (Map(BB) || command = "holdback" && Map(z)) && stateType = A && ctrl && map(airJumpCount) != 0 && command != "holddown" {
+	if pos Y < -50 && vel y < 0 || vel y > 0 {
+		changeState{value: 115}
+	} 
+}
+
+#Buffered Button IAD
+if map(airDashMacroBuffer) = 1 && map(airDashMacroDirection) = 1 && stateType = A && ctrl && map(airJumpCount) != 0
+{
+	if pos Y < -50 && vel y < 0 || vel y > 0{
+		changeState{value: 110}
+	}
+}
+
+#Buffered Button IADB
+if map(airDashMacroBuffer) = 1 && map(airDashMacroDirection) = 0 && stateType = A && ctrl && map(airJumpCount) != 0
+{
+	if pos Y < -50 && vel y < 0 || vel y > 0{
+		changeState{value: 115}
+	}
+}
+
+#Bufferd Button IAD Check
+if Map(z) && (stateNo = 50 || stateNo = 53 || stateNo = 40) && time <= 10 {
+	mapSet{map:"airDashMacroBuffer"; value: 1}
+	
+	if command = "holdback"{
+		mapSet{map:"airDashMacroDirection"; value: 0}
+	}
+	else if command = "holdfwd" || command != "holdback" && command != "holdfwd"
+	{
+		mapSet{map:"airDashMacroDirection"; value: 1}
+	}
+}
+
+#Has stopped pressing any up direction while jumping
+if stateType = A && ctrl{
+	if (command = "release_up"|| command = "release_upfwd" || command = "release_upback") && command != "holdup"   {
+		mapSet{map:"airJumpInput"; value: 0}
+	}
+}
+
+#Throw Tech xd
+if ctrl && (Map(x) || Map(y) || Map(a) || Map(b)) && Map(ThrowTechBuffer) != 1{
+	MapSet{map: "ThrowTechBuffer"; value: 1}
+	MapSet{map: "TechTimer"; value: gameTime}
+}
+
+if gameTime = Map(TechTimer) + 4 {
+	MapSet{map: "ThrowTechBuffer"; value: 0}
+}
+
+#-------------------------------------------------------------------------------
+#Hi parry
+if map(xa) && command != "holddown" &&
+	(stateType = S && (ctrl || time <= 3))  {
+	changeState{value: 700}
+}
+
+#-------------------------------------------------------------------------------
+#Low parry
+if map(xa) && command = "holddown" &&
+	(stateType = C && (ctrl || time <= 3))  {
+	changeState{value: 710}
+}
+
+#-------------------------------------------------------------------------------
+#Air Parry
+if map(xa) &&
+	(stateType = A && (ctrl || time <= 3))  {
+	changeState{value: 720}
+}
+
+#-------------------------------------------------------------------------------
+#Stand Light Punch
+if map(x) && command != "holddown" &&
+	((stateType = S && ctrl) ||
+		(stateNo = 200 && animElemTime(3) > 0)) {
+	changeState{value: 200}
+}
+
+#-------------------------------------------------------------------------------
+#Stand Strong Punch
+if map(y) && command != "holddown" &&
+	((stateType = S && ctrl) ||
+		((stateNo = 200 || stateNo = 230 || stateNo = 430 || stateNo = 400) && animElemTime(3) > 0)) {
+	changeState{value: 210}
+}
+
+#-------------------------------------------------------------------------------
+#Stand Light Kick
+if map(a) &&Command != "holddown" &&
+	((stateType = S && ctrl) ||
+		((stateNo = 200 || stateNo = 400 || stateNo = 430) && animElemTime(3) > 0)) {
+	changeState{value: 230}
+}
+
+#-------------------------------------------------------------------------------
+#Standing Strong Kick
+if map(b) &&Command != "holddown" &&
+	((stateType = S && ctrl) ||
+		((stateNo = 200 || stateNo = 230 || stateNo = 210 || stateNo = 400 || stateNo = 430 || stateNo = 410) && animElemTime(3) > 0)) {
+	changeState{value: 240}
+}
+
+#-------------------------------------------------------------------------------
+#Taunt
+if command = "start" && command != "holddown" && stateType != A && ctrl {
+	changeState{value: 195}
+}
+
+#-------------------------------------------------------------------------------
+#Crouching Light Punch
+if map(x) && command = "holddown" && stateType = C && ctrl {
+	changeState{value: 400}
+}
+
+#-------------------------------------------------------------------------------
+#Crouching Strong Punch
+if map(y) && command = "holddown" &&
+	((stateType = C && ctrl) ||
+		(stateNo = 400 && animElemTime(2) > 0) ||
+		((stateNo = 430 || stateNo = 230 || stateNo = 210 || stateNo = 200 || stateNo = 400) && moveContact && animElemTime(3) > 0)) {
+	changeState{value: 410}
+}
+
+#-------------------------------------------------------------------------------
+#Crouching Light Kick
+if map(a) && command = "holddown" &&
+	((stateType = C && ctrl) ||
+		(stateNo = 400 && animElemTime(2) > 0) ||
+		((stateNo = 430|| stateNo = 230|| stateNo = 200 || stateNo = 400) && moveContact && animElemTime(3) > 0)) {
+	changeState{value: 430}
+}
+
+#-------------------------------------------------------------------------------
+#Crouching Strong Kick
+if map(b) && command = "holddown" &&
+	((stateType = C && ctrl) ||
+		(stateNo = 400 && animElemTime(2) > 0) ||
+		((stateNo = 430 || stateNo = 410 || stateNo = 200 || stateNo = 210 || stateNo = 230 || stateNo = 400) && moveContact && animElemTime(3) > 0)) {
+	changeState{value: 440}
+}
+
+#-------------------------------------------------------------------------------
+#Jump Light Punch
+if map(x) &&
+	((stateType = A && ctrl) ||
+		(stateNo = 600 && animElemTime(2) > 0) ||
+		stateNo = 1350) { #Air blocking
+	changeState{value: 600}
+}
+
+#-------------------------------------------------------------------------------
+#Jump Strong Punch
+if map(y) &&
+	((stateType = A && ctrl) ||
+		((stateNo = 600 || stateNo = 630) && moveContact) || #jump_x or jump_a
+		stateNo = 1350) { #Air blocking
+	changeState{value: 610}
+}
+
+#-------------------------------------------------------------------------------
+#Jump Light Kick
+if map(a) &&
+	((stateType = A && ctrl) ||
+	((stateNo = 600) && moveContact) ||
+		stateNo = 1350) { #Air blocking
+	changeState{value: 630}
+}
+
+#-------------------------------------------------------------------------------
+#Jump Strong Kick
+if map(b) &&
+	((stateType = A && ctrl) ||
+		((stateNo = 600 || stateNo = 630 || stateNo = 610) && moveContact) || #jump_x or jump_a
+		stateNo = 1350) { #Air blocking
+	changeState{value: 640}
+}
+
+#End of file: roundState = 2
+#===============================================================================
+}
