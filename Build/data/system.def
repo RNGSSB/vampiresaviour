@@ -116,7 +116,7 @@ connecting.host.text = "Waiting for player 2... (%s)" ;Ikemen feature
 connecting.join.text = "Now connecting to %s... (%s)" ;Ikemen feature
 ;connecting.overlay.window = 0, 0, 320, 240            ;Ikemen feature
 connecting.overlay.col = 0, 0, 0                      ;Ikemen feature
-connecting.overlay.alpha = 20, 100                    ;Ikemen feature
+connecting.overlay.alpha = 0, 128                     ;Ikemen feature
 textinput.offset = 25, 165                            ;Ikemen feature
 textinput.font = 6,0,1, 191,191,191                   ;Ikemen feature
 textinput.scale = 1.0, 1.0                            ;Ikemen feature
@@ -124,7 +124,7 @@ textinput.name.text = "Enter Host display name, e.g. John.\nExisting entries can
 textinput.address.text = "Enter Host IP address, e.g. 127.0.0.1\nCopied text can be pasted with INSERT button."  ;Ikemen feature
 ;textinput.overlay.window = 0, 0, 320, 240             ;Ikemen feature
 textinput.overlay.col = 0, 0, 0                       ;Ikemen feature
-textinput.overlay.alpha = 20, 100                     ;Ikemen feature
+textinput.overlay.alpha = 0, 128                      ;Ikemen feature
 
 ; These parameters define the window in which the items are visible
 ; in.
@@ -255,7 +255,7 @@ text.font = 6,0,1, 191,191,191
 text.scale = 1.0, 1.0            ;Ikemen feature
 ;overlay.window = 0, 0, 320, 240  ;Ikemen feature
 overlay.col = 0, 0, 0            ;Ikemen feature
-overlay.alpha = 20, 100          ;Ikemen feature
+overlay.alpha = 0, 128           ;Ikemen feature
 
 ;----------------------------
 [Infobox Text]
@@ -264,9 +264,8 @@ Welcome to SUEHIRO's I.K.E.M.E.N GO engine!
 * This is a public development release, for testing purposes.
 * This build may contain bugs and incomplete features.
 * Your help and cooperation are appreciated!
+* Ikemen GO engine repositories: https://github.com/ikemen-engine
 * Original repo source code: https://osdn.net/users/supersuehiro/
-* Bug reports: https://github.com/Windblade-GR01/Ikemen-GO/issues
-* Features wiki: https://github.com/K4thos/Ikemen_GO/wiki
 
 ;-------------------------------------------------------------------
 ;Character select definition
@@ -376,33 +375,33 @@ p1.teammenu.value.empty.icon.spr = 182,0
 p1.teammenu.value.spacing = 6,0
 
 p1.teammenu.ratio1.icon.spr = 300, 0       ;Ikemen feature
-p1.teammenu.ratio1.icon.offset = 172, 53   ;Ikemen feature
+p1.teammenu.ratio1.icon.offset = 56, -11   ;Ikemen feature
 p1.teammenu.ratio1.icon.facing = 1         ;Ikemen feature
-p1.teammenu.ratio1.icon.scale = 0.40, 0.40 ;Ikemen feature
+p1.teammenu.ratio1.icon.scale = 0.50, 0.50 ;Ikemen feature
 p1.teammenu.ratio2.icon.spr = 300, 1       ;Ikemen feature
-p1.teammenu.ratio2.icon.offset = 172, 53   ;Ikemen feature
+p1.teammenu.ratio2.icon.offset = 56, -11   ;Ikemen feature
 p1.teammenu.ratio2.icon.facing = 1         ;Ikemen feature
-p1.teammenu.ratio2.icon.scale = 0.40, 0.40 ;Ikemen feature
+p1.teammenu.ratio2.icon.scale = 0.50, 0.50 ;Ikemen feature
 p1.teammenu.ratio3.icon.spr = 300, 2       ;Ikemen feature
-p1.teammenu.ratio3.icon.offset = 172, 53   ;Ikemen feature
+p1.teammenu.ratio3.icon.offset = 56, -11   ;Ikemen feature
 p1.teammenu.ratio3.icon.facing = 1         ;Ikemen feature
-p1.teammenu.ratio3.icon.scale = 0.40, 0.40 ;Ikemen feature
+p1.teammenu.ratio3.icon.scale = 0.50, 0.50 ;Ikemen feature
 p1.teammenu.ratio4.icon.spr = 300, 3       ;Ikemen feature
-p1.teammenu.ratio4.icon.offset = 172, 53   ;Ikemen feature
+p1.teammenu.ratio4.icon.offset = 56, -11   ;Ikemen feature
 p1.teammenu.ratio4.icon.facing = 1         ;Ikemen feature
-p1.teammenu.ratio4.icon.scale = 0.40, 0.40 ;Ikemen feature
+p1.teammenu.ratio4.icon.scale = 0.50, 0.50 ;Ikemen feature
 p1.teammenu.ratio5.icon.spr = 300, 4       ;Ikemen feature
-p1.teammenu.ratio5.icon.offset = 172, 53   ;Ikemen feature
+p1.teammenu.ratio5.icon.offset = 56, -11   ;Ikemen feature
 p1.teammenu.ratio5.icon.facing = 1         ;Ikemen feature
-p1.teammenu.ratio5.icon.scale = 0.40, 0.40 ;Ikemen feature
+p1.teammenu.ratio5.icon.scale = 0.50, 0.50 ;Ikemen feature
 p1.teammenu.ratio6.icon.spr = 300, 5       ;Ikemen feature
-p1.teammenu.ratio6.icon.offset = 172, 53   ;Ikemen feature
+p1.teammenu.ratio6.icon.offset = 56, -11   ;Ikemen feature
 p1.teammenu.ratio6.icon.facing = 1         ;Ikemen feature
-p1.teammenu.ratio6.icon.scale = 0.40, 0.40 ;Ikemen feature
+p1.teammenu.ratio6.icon.scale = 0.50, 0.50 ;Ikemen feature
 p1.teammenu.ratio7.icon.spr = 300, 6       ;Ikemen feature
-p1.teammenu.ratio7.icon.offset = 172, 53   ;Ikemen feature
+p1.teammenu.ratio7.icon.offset = 56, -11   ;Ikemen feature
 p1.teammenu.ratio7.icon.facing = 1         ;Ikemen feature
-p1.teammenu.ratio7.icon.scale = 0.40, 0.40 ;Ikemen feature
+p1.teammenu.ratio7.icon.scale = 0.50, 0.50 ;Ikemen feature
 
 ;p2 team
 p2.teammenu.pos = 299, 30
@@ -428,33 +427,33 @@ p2.teammenu.value.empty.icon.spr = 192,0
 p2.teammenu.value.spacing = -6,0
 
 p2.teammenu.ratio1.icon.spr = 301, 0       ;Ikemen feature
-p2.teammenu.ratio1.icon.offset = 309, 53   ;Ikemen feature
+p2.teammenu.ratio1.icon.offset = -56, -11  ;Ikemen feature
 p2.teammenu.ratio1.icon.facing = 1         ;Ikemen feature
-p2.teammenu.ratio1.icon.scale = 0.40, 0.40 ;Ikemen feature
+p2.teammenu.ratio1.icon.scale = 0.50, 0.50 ;Ikemen feature
 p2.teammenu.ratio2.icon.spr = 301, 1       ;Ikemen feature
-p2.teammenu.ratio2.icon.offset = 309, 53   ;Ikemen feature
+p2.teammenu.ratio2.icon.offset = -56, -11  ;Ikemen feature
 p2.teammenu.ratio2.icon.facing = 1         ;Ikemen feature
-p2.teammenu.ratio2.icon.scale = 0.40, 0.40 ;Ikemen feature
+p2.teammenu.ratio2.icon.scale = 0.50, 0.50 ;Ikemen feature
 p2.teammenu.ratio3.icon.spr = 301, 2       ;Ikemen feature
-p2.teammenu.ratio3.icon.offset = 309, 53   ;Ikemen feature
+p2.teammenu.ratio3.icon.offset = -56, -11  ;Ikemen feature
 p2.teammenu.ratio3.icon.facing = 1         ;Ikemen feature
-p2.teammenu.ratio3.icon.scale = 0.40, 0.40 ;Ikemen feature
+p2.teammenu.ratio3.icon.scale = 0.50, 0.50 ;Ikemen feature
 p2.teammenu.ratio4.icon.spr = 301, 3       ;Ikemen feature
-p2.teammenu.ratio4.icon.offset = 309, 53   ;Ikemen feature
+p2.teammenu.ratio4.icon.offset = -56, -11  ;Ikemen feature
 p2.teammenu.ratio4.icon.facing = 1         ;Ikemen feature
-p2.teammenu.ratio4.icon.scale = 0.40, 0.40 ;Ikemen feature
+p2.teammenu.ratio4.icon.scale = 0.50, 0.50 ;Ikemen feature
 p2.teammenu.ratio5.icon.spr = 301, 4       ;Ikemen feature
-p2.teammenu.ratio5.icon.offset = 309, 53   ;Ikemen feature
+p2.teammenu.ratio5.icon.offset = -56, -11  ;Ikemen feature
 p2.teammenu.ratio5.icon.facing = 1         ;Ikemen feature
-p2.teammenu.ratio5.icon.scale = 0.40, 0.40 ;Ikemen feature
+p2.teammenu.ratio5.icon.scale = 0.50, 0.50 ;Ikemen feature
 p2.teammenu.ratio6.icon.spr = 301, 5       ;Ikemen feature
-p2.teammenu.ratio6.icon.offset = 309, 53   ;Ikemen feature
+p2.teammenu.ratio6.icon.offset = -56, -11  ;Ikemen feature
 p2.teammenu.ratio6.icon.facing = 1         ;Ikemen feature
-p2.teammenu.ratio6.icon.scale = 0.40, 0.40 ;Ikemen feature
+p2.teammenu.ratio6.icon.scale = 0.50, 0.50 ;Ikemen feature
 p2.teammenu.ratio7.icon.spr = 301, 6       ;Ikemen feature
-p2.teammenu.ratio7.icon.offset = 309, 53   ;Ikemen feature
+p2.teammenu.ratio7.icon.offset = -56, -11  ;Ikemen feature
 p2.teammenu.ratio7.icon.facing = 1         ;Ikemen feature
-p2.teammenu.ratio7.icon.scale = 0.40, 0.40 ;Ikemen feature
+p2.teammenu.ratio7.icon.scale = 0.50, 0.50 ;Ikemen feature
 
 teammenu.itemname.single = Single ;Ikemen feature
 teammenu.itemname.simul = Simul   ;Ikemen feature
@@ -682,7 +681,7 @@ fadeout.time = 120                ;Ikemen feature
 fadeout.col = 0, 0, 0             ;Ikemen feature
 ;overlay.window = 0, 0, 320, 240   ;Ikemen feature
 overlay.col = 0, 0, 0             ;Ikemen feature
-overlay.alpha = 20, 100           ;Ikemen feature
+overlay.alpha = 0, 128            ;Ikemen feature
 p1.state = 5500, 5300             ;Ikemen feature
 p1.yes.state = 5510, 180          ;Ikemen feature
 p1.no.state = 5520, 170           ;Ikemen feature
@@ -1347,15 +1346,15 @@ menu.boxcursor.col = 255, 255, 255                ;Ikemen feature
 menu.boxcursor.alpharange = 10, 40, 2, 255, 0     ;Ikemen feature
 menu.boxbg.visible = 1                            ;Ikemen feature
 menu.boxbg.col = 0, 0, 0                          ;Ikemen feature
-menu.boxbg.alpha = 20, 100                        ;Ikemen feature
+menu.boxbg.alpha = 0, 128                         ;Ikemen feature
 ;menu.arrow.up.anim =                             ;Ikemen feature
 menu.arrow.up.spr = 400, 0                        ;Ikemen feature
-menu.arrow.up.offset = 368, -7                    ;Ikemen feature
+menu.arrow.up.offset = 141, -20                   ;Ikemen feature
 menu.arrow.up.facing = 1                          ;Ikemen feature
 menu.arrow.up.scale = 0.5, 0.5                    ;Ikemen feature
 ;menu.arrow.down.anim =                           ;Ikemen feature
 menu.arrow.down.spr = 401, 0                      ;Ikemen feature
-menu.arrow.down.offset = 368, 385                 ;Ikemen feature
+menu.arrow.down.offset = 141, 176                 ;Ikemen feature
 menu.arrow.down.facing = 1                        ;Ikemen feature
 menu.arrow.down.scale = 0.5, 0.5                  ;Ikemen feature
 menu.title.uppercase = 1                          ;Ikemen feature
@@ -1415,7 +1414,7 @@ textinput.reswidth.text = "Type in screen width.\nPress ENTER to accept.\nPress 
 textinput.resheight.text = "Type in screen height.\nPress ENTER to accept.\nPress ESC to cancel."   ;Ikemen feature
 ;textinput.overlay.window = 0, 0, 320, 240         ;Ikemen feature
 textinput.overlay.col = 0, 0, 0                   ;Ikemen feature
-textinput.overlay.alpha = 20, 100                 ;Ikemen feature
+textinput.overlay.alpha = 0, 128                  ;Ikemen feature
 
 cursor.move.snd = 100, 0
 cursor.done.snd = 100, 1
@@ -1463,15 +1462,15 @@ menu.boxcursor.col = 255, 255, 255
 menu.boxcursor.alpharange = 10, 40, 2, 255, 255, 0
 menu.boxbg.visible = 1
 menu.boxbg.col = 0, 0, 0
-menu.boxbg.alpha = 20, 100
+menu.boxbg.alpha = 0, 128
 ;menu.arrow.up.anim =
 menu.arrow.up.spr = 400, 0
-menu.arrow.up.offset = 368, -7
+menu.arrow.up.offset = 141, -20
 menu.arrow.up.facing = 1
 menu.arrow.up.scale = 0.5, 0.5
 ;menu.arrow.down.anim =
 menu.arrow.down.spr = 401, 0
-menu.arrow.down.offset = 368, 385
+menu.arrow.down.offset = 141, 176
 menu.arrow.down.facing = 1
 menu.arrow.down.scale = 0.5, 0.5
 menu.title.uppercase = 1
@@ -1531,21 +1530,21 @@ menu.boxcursor.col = 255, 255, 255
 menu.boxcursor.alpharange = 10, 40, 2, 255, 255, 0
 menu.boxbg.visible = 1
 menu.boxbg.col = 0, 0, 0
-menu.boxbg.alpha = 20, 100
+menu.boxbg.alpha = 0, 128
 ;menu.arrow.up.anim =
 menu.arrow.up.spr = 400, 0
-menu.arrow.up.offset = 368, -7
+menu.arrow.up.offset = 141, -20
 menu.arrow.up.facing = 1
 menu.arrow.up.scale = 0.5, 0.5
 ;menu.arrow.down.anim =
 menu.arrow.down.spr = 401, 0
-menu.arrow.down.offset = 368, 385
+menu.arrow.down.offset = 141, 176
 menu.arrow.down.facing = 1
 menu.arrow.down.scale = 0.5, 0.5
 menu.title.uppercase = 1
 ;overlay.window = 0, 0, 320, 240
 overlay.col = 0, 0, 0
-overlay.alpha = 20, 100
+overlay.alpha = 0, 128
 cursor.move.snd = 100, 0
 cursor.done.snd = 100, 1
 cancel.snd = 100, 2
@@ -1569,7 +1568,7 @@ movelist.window.margins.y = 20, 1
 movelist.window.visibleitems = 18
 ;movelist.overlay.window = 0, 0, 320, 240
 movelist.overlay.col = 0, 0, 0
-movelist.overlay.alpha = 20, 100
+movelist.overlay.alpha = 0, 128
 ;movelist.arrow.up.anim = 
 ;movelist.arrow.up.spr = 
 movelist.arrow.up.offset = 0, 0
@@ -1592,65 +1591,9 @@ movelist.arrow.down.scale = 1.0, 1.0
 ;Training menu screen definition
 [Training Info] ;Ikemen feature
 
-	menu.valuename.dummycontrol.cooperative = "Cooperative"
-	menu.valuename.dummycontrol.ai = "AI"
-	menu.valuename.dummycontrol.manual = "Manual"
-	menu.valuename.ailevel.1 = "1"
-	menu.valuename.ailevel.2 = "2"
-	menu.valuename.ailevel.3 = "3"
-	menu.valuename.ailevel.4 = "4"
-	menu.valuename.ailevel.5 = "5"
-	menu.valuename.ailevel.6 = "6"
-	menu.valuename.ailevel.7 = "7"
-	menu.valuename.ailevel.8 = "8"
-	menu.valuename.guardmode.none = "None"
-	menu.valuename.guardmode.auto = "Auto"
-	menu.valuename.guardmode.high = "High"
-	menu.valuename.guardmode.low = "Low"
-	menu.valuename.dummymode.stand = "Stand"
-	menu.valuename.dummymode.crouch = "Crouch"
-	menu.valuename.dummymode.jump = "Jump"
-	menu.valuename.dummymode.wjump = "W Jump"
-	menu.valuename.distance.any = "Any"
-	menu.valuename.distance.close = "Close"
-	menu.valuename.distance.medium = "Medium"
-	menu.valuename.distance.far = "Far"
-	menu.valuename.mashoption.idle = "Idle"
-	menu.valuename.mashoption.counter = "Counter"
-	menu.valuename.buttonjam.none = "None"
-	menu.valuename.buttonjam.a = "A"
-	menu.valuename.buttonjam.b = "B"
-	menu.valuename.buttonjam.c = "C"
-	menu.valuename.buttonjam.x = "X"
-	menu.valuename.buttonjam.y = "Y"
-	menu.valuename.buttonjam.z = "Z"
-	menu.valuename.buttonjam.s = "Start"
-	menu.valuename.buttonjam.d = "D"
-	menu.valuename.buttonjam.w = "W"
-
 ; If not overridden, values used for [Menu Info] are shared with [Training Info]
 ; If custom menus are not declared, default menu screen layout is loaded.
 ; Refer to system.base.def for an example how to modify pause screen menus.
-
-	menu.itemname.back = "Continue"
-	menu.itemname.menutraining = "Training Menu"
-	menu.itemname.menutraining.dummycontrol = "Dummy Control"
-	menu.itemname.menutraining.ailevel = "AI Level"
-	menu.itemname.menutraining.guardmode = "Guard Mode"
-	menu.itemname.menutraining.dummymode = "Dummy Mode"
-	menu.itemname.menutraining.distance = "Distance"
-	menu.itemname.menutraining.mashoption = "Mash Option"
-	menu.itemname.menutraining.buttonjam = "Button Jam"
-	menu.itemname.menutraining.back = "Back"
-	menu.itemname.menuinput = "Button Config"
-	menu.itemname.menuinput.keyboard = "Key Config"
-	menu.itemname.menuinput.gamepad = "Joystick Config"
-	menu.itemname.menuinput.empty = ""
-	menu.itemname.menuinput.inputdefault = "Default"
-	menu.itemname.menuinput.back = "Back"
-	menu.itemname.commandlist = "Command List"
-	menu.itemname.characterchange = "Character Change"
-	menu.itemname.exit = "Exit"
 
 ;-------------------
 ;Training menu screen background
@@ -1765,7 +1708,7 @@ text.displaytime = 0
 text.layerno = 2
 ;overlay.window = 0, 0, 320, 240
 overlay.col = 0, 0, 0
-overlay.alpha = 20, 100
+overlay.alpha = 0, 128
 
 ;"Here Comes A New Challenger!!" Animation
 [Begin Action 500]
@@ -1809,8 +1752,8 @@ starttime = 30
 endtime = 60
 switchtime = 30
 skiptime = 30
-key.skip = "a"
-key.cancel = "b&c&x&y&z&s"
+skip.key = "a"
+cancel.key = "b&c&x&y&z&s"
 p1.bg.anim = 700
 ;p1.bg.spr = 
 p1.bg.offset = 0, 32
@@ -1991,7 +1934,7 @@ window.margins.y = 20, 1
 window.visibleitems = 10
 ;overlay.window = 0, 0, 320, 240
 overlay.col = 0, 0, 0
-overlay.alpha = 20, 100
+overlay.alpha = 0, 128
 move.snd = 100, 0
 done.snd = 100, 1
 cancel.snd = 100, 2
@@ -2019,6 +1962,6 @@ text.font = 2,0,1
 text.scale = 1.0, 1.0
 ;overlay.window = 0, 0, 320, 240
 overlay.col = 0, 0, 0
-overlay.alpha = 20, 100
+overlay.alpha = 0, 128
 done.snd = 100, 0
 cancel.snd = 100, 2

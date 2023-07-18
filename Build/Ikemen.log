@@ -1,10 +1,8 @@
-external/script/main.lua:702: <game end>
+.\external\script\storyboard.lua:117: <game end>
 stack traceback:
 	[G]: in function 'refresh'
-	external/script/main.lua:702: in function 'f_refresh'
-	.\external\script\start.lua:2211: in function 'f_selectScreen'
-	.\external\script\start.lua:1420: in function 'f'
-	external/script/main.lua:3001: in function 'loop'
-	external/script/main.lua:3121: in function 'loop'
-	external/script/main.lua:4093: in main chunk
+	.\external\script\storyboard.lua:117: in function 'f_play'
+	.\external\script\storyboard.lua:449: in function 'f_storyboard'
+	external/script/main.lua:3082: in function 'loop'
+	external/script/main.lua:4156: in main chunk
 	[G]: ?

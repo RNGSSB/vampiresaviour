@@ -108,12 +108,8 @@ if animTime = 0 {
 		let x = const(velocity.jump.back.x);
 	}
 	
-	if !command = "holdup"{
-		let y = const(velocity.jump.y) * 0.7;
-	}
-	else{
 		let y = const(velocity.jump.y);
-	}
+
 	velSet{x: $x; y: $y}
 	changeState{value: 50; ctrl: 1}
 }
@@ -251,33 +247,29 @@ if time < 7 {
 	{
 		mapSet{map: "airDashAttackBuffer"; value: 2}
 	}
-	else if Map(a) && command != "holddown"
+	else if Map(z) && command != "holddown"
 	{
 		mapSet{map: "airDashAttackBuffer"; value: 3}
 	}
-	else if Map(b) && command != "holddown"
+	else if Map(a) && command != "holddown"
 	{
 		mapSet{map: "airDashAttackBuffer"; value: 4}
 	}
-	else if Map(c)
+	else if Map(x) && command = "holddown"
 	{
 		mapSet{map: "airDashAttackBuffer"; value: 5}
 	}
-	else if Map(x) && command = "holddown"
+	else if Map(y) && command = "holddown"
 	{
 		mapSet{map: "airDashAttackBuffer"; value: 6}
 	}
-	else if Map(y) && command = "holddown"
+	else if Map(z) && command = "holddown"
 	{
-		mapSet{map: "airDashAttackBuffer"; value: 7}
+		mapSet{map: "airDashAttackBuffer"; value: 7}	
 	}
 	else if Map(a) && command = "holddown"
 	{
-		mapSet{map: "airDashAttackBuffer"; value: 8}	
-	}
-	else if Map(b) && command = "holddown"
-	{
-		mapSet{map: "airDashAttackBuffer"; value: 9}
+		mapSet{map: "airDashAttackBuffer"; value: 8}
 	}
 	
 }
@@ -305,12 +297,6 @@ if time = 7 {
 		velSet{x: 6.5}
 		mapSet{map: "airDashAttackBuffer"; value: 0}	
 		changeState{value: 640}
-	}
-	else if map(airDashAttackBuffer) = 5
-	{
-		velSet{x: 6.5}
-		mapSet{map: "airDashAttackBuffer"; value: 0}	
-		changeState{value: 650}
 	}
 
 	velSet{x: 5.5}
@@ -354,33 +340,29 @@ if time < 7 {
 	{
 		mapSet{map: "airDashAttackBuffer"; value: 2}
 	}
-	else if Map(a) && command != "holddown"
+	else if Map(z) && command != "holddown"
 	{
 		mapSet{map: "airDashAttackBuffer"; value: 3}
 	}
-	else if Map(b) && command != "holddown"
+	else if Map(a) && command != "holddown"
 	{
 		mapSet{map: "airDashAttackBuffer"; value: 4}
 	}
-	else if Map(c)
+	else if Map(x) && command = "holddown"
 	{
 		mapSet{map: "airDashAttackBuffer"; value: 5}
 	}
-	else if Map(x) && command = "holddown"
+	else if Map(y) && command = "holddown"
 	{
 		mapSet{map: "airDashAttackBuffer"; value: 6}
 	}
-	else if Map(y) && command = "holddown"
+	else if Map(z) && command = "holddown"
 	{
-		mapSet{map: "airDashAttackBuffer"; value: 7}
+		mapSet{map: "airDashAttackBuffer"; value: 7}	
 	}
 	else if Map(a) && command = "holddown"
 	{
-		mapSet{map: "airDashAttackBuffer"; value: 8}	
-	}
-	else if Map(b) && command = "holddown"
-	{
-		mapSet{map: "airDashAttackBuffer"; value: 9}
+		mapSet{map: "airDashAttackBuffer"; value: 8}
 	}
 	
 }
@@ -393,22 +375,17 @@ if time = 7 {
 	else if map(airDashAttackBuffer) = 2 || map(airDashAttackBuffer) = 7
 	{
 		mapSet{map: "airDashAttackBuffer"; value: 0}	
-		changeState{value: 630}
+		changeState{value: 610}
 	}
 	else if map(airDashAttackBuffer) = 3 || map(airDashAttackBuffer) = 8
 	{
 		mapSet{map: "airDashAttackBuffer"; value: 0}	
-		changeState{value: 610}
+		changeState{value: 630}
 	}
 	else if map(airDashAttackBuffer) = 4 || map(airDashAttackBuffer) = 9
 	{
 		mapSet{map: "airDashAttackBuffer"; value: 0}	
 		changeState{value: 640}
-	}
-	else if map(airDashAttackBuffer) = 5
-	{
-		mapSet{map: "airDashAttackBuffer"; value: 0}	
-		changeState{value: 650}
 	}
 
 	velSet{x: -6.5}
@@ -718,12 +695,20 @@ call EndState(0);
 
 #-------------------------------------------------------------------------------
 # Stand get-hit (shaking)
-[StateDef 5000; type: S; moveType: H; physics: N; velSet: 0, 0;]
+[StateDef 5000; type: S; movetype: H; physics: N; velset: 0, 0;]
 
 call GetHitShaking(ifElse(getHitVar(groundType) = 1, 5000, 5010));
 if (time = 0 && (getHitVar(yVel) || getHitVar(fall))) || pos y != 0 {
-	stateTypeSet{stateType: A}
+	stateTypeSet{statetype: A}
 }
+
+velset{x: -0.85 * -map(DIdirX)}
+velset{y: -0.85 * map(DIdirY)}
+
+if pos y != 0{
+	changeState{value: 5020}
+}
+
 if anim = 5000 || anim = 5010 {
 	forceFeedback{time: 6; waveform: square}
 } else if anim = 5001 || anim = 5011 {
@@ -731,24 +716,34 @@ if anim = 5000 || anim = 5010 {
 } else if anim = 5012 || anim = 5002 || anim = 5030 {
 	forceFeedback{time: 15; waveform: sinesquare; ampl: 140}
 }
+
+
 if hitShakeOver {
 	changeState{value: ifElse(getHitVar(yVel) || getHitVar(fall), 5030, 5001)}
 }
 
 #-------------------------------------------------------------------------------
 # Stand get-hit (knocked back)
-[StateDef 5001; type: S; moveType: H; physics: S;]
+[StateDef 5001; type: S; movetype: H; physics: S;]
 
 call GetHitKnockedBack(5005 + (getHitVar(groundType) = 2) * 10, 0);
 
 #-------------------------------------------------------------------------------
 # Crouch get-hit (shaking)
-[StateDef 5010; type: C; moveType: H; physics: N; velSet: 0, 0;]
+[StateDef 5010; type: C; movetype: H; physics: N; velset: 0, 0;]
 
 call GetHitShaking(5020);
 if (time = 0 && (getHitVar(yVel) || getHitVar(fall))) || pos y != 0 {
-	stateTypeSet{stateType: A}
+	stateTypeSet{statetype: A}
 }
+
+velset{x: -0.85 * -map(DIdirX)}
+velset{y: -0.85 * map(DIdirY)}
+
+if pos y != 0{
+	changeState{value: 5020}
+}
+
 if hitShakeOver {
 	changeState{value: ifElse(getHitVar(yVel) || getHitVar(fall), 5030, 5011)}
 }
@@ -762,18 +757,22 @@ if anim = 5020 {
 
 #-------------------------------------------------------------------------------
 # Crouch get-hit (knocked back)
-[StateDef 5011; type: C; moveType: H; physics: C;]
+[StateDef 5011; type: C; movetype: H; physics: C;]
 
 call GetHitKnockedBack(5025, 11);
 
 #-------------------------------------------------------------------------------
 # Air get-hit (shaking)
-[StateDef 5020; type: A; moveType: H; physics: N; velSet: 0, 0;]
+[StateDef 5020; type: A; movetype: H; physics: N; velset: 0, 0;]
 
 call GetHitShaking(ifElse(getHitVar(airType) = 1, 5000, 5010));
 if hitShakeOver {
 	changeState{value: 5030}
 }
+
+velset{x: -0.85 * -map(DIdirX)}
+velset{y: -0.85 * map(DIdirY)}
+
 if anim = 5000 || anim = 5010 {
 	forceFeedback{time: 6; waveform: square}
 } else if anim = 5001 || anim = 5011 {
@@ -784,9 +783,9 @@ if anim = 5000 || anim = 5010 {
 
 #-------------------------------------------------------------------------------
 # Air get-hit (knocked away)
-[StateDef 5030; type: A; moveType: H; physics: N; ctrl: 0;]
+[StateDef 5030; type: A; movetype: H; physics: N; ctrl: 0;]
 
-if majorVersion = 1 && anim != [5000, 5199] && selfAnimExist(5030) {
+if anim != [5000, 5199] && selfAnimExist(5030) {
 	changeAnim{value: 5030}
 }
 if time = 0 {
@@ -794,11 +793,16 @@ if time = 0 {
 } else {
 	velAdd{y: getHitVar(yAccel)}
 }
+
+if time = 1 {
+velset{x: vel X + (enemy, map(directionMultiplierX) * Map(DIdirX))  ; y: vel Y - (enemy, map(directionMultiplierY) * Map(DIdirY))}
+}
+
 if hitOver || vel y > 0 && pos y >= const(movement.air.gethit.groundlevel) {
 	if hitFall {
 		changeState{value: 5050}
 	} else {
-		changeState{value: 5050}
+		changeState{value: 5040}
 	}
 }
 if animTime = 0 {
@@ -807,7 +811,7 @@ if animTime = 0 {
 
 #-------------------------------------------------------------------------------
 # Air get-hit (transition)
-[StateDef 5035; type: A; moveType: H; physics: N;]
+[StateDef 5035; type: A; movetype: H; physics: N;]
 
 if time = 0 && selfAnimExist(5035) && anim != [5051, 5059] && anim != 5090 {
 	changeAnim{value: 5035}
@@ -821,7 +825,7 @@ if hitOver || animTime = 0 ||
 	if hitFall {
 		changeState{value: 5050}
 	} else {
-		changeState{value: 5050}
+		changeState{value: 5040}
 	}
 }
 
@@ -832,23 +836,32 @@ if hitOver || animTime = 0 ||
 if !alive {
 	changeState{value: 5050; ctrl: 0}
 }
-if animTime = 0 && anim != 5040 || time = 0 && anim != 5035 {
-	changeAnim{value: 5040}
+
+if time = 10{
+	playSnd{value: F12, 5}
 }
-if hitOver {
-	ctrlSet{value: 1}
-	stateTypeSet{moveType: I}
-}
+
 if time > 0 {
 	velAdd{y: getHitVar(yAccel)}
 }
+
+if animTime = 0{
+changeAnim{value: 5050}
+}
+
+if alive && hitOver
+{
+if (Map(x)|| Map(h_x))|| GameMode = "training" {
+		selfState{value: 5210}
+	}
+}
+
 if vel y > 0 && pos y >= 0 {
 	changeState{value: 52}
 }
-
 #-------------------------------------------------------------------------------
 # Air get-hit (falling)
-[StateDef 5050; type: A; moveType: H; physics: N;]
+[StateDef 5050; type: A; movetype: H; physics: N;]
 
 if animTime = 0 && anim = 5035 || time = 0 && anim != 5035 &&
 	anim != [5051, 5059] && anim != [5061, 5069] && anim != 5090 {
@@ -862,14 +875,17 @@ if time > 0 {
 	velAdd{y: getHitVar(yAccel)}
 }
 
-if vel y > 0 && pos y >= cond(anim = [5051, 5059] || anim = [5061, 5069], 0,
-	ifElse(majorVersion = 1, const(movement.air.gethit.groundlevel), 25)) {
+if alive && canRecover && hitOver && (Map(x)|| Map(h_x)) || GameMode = "training" && alive && canRecover && hitOver {
+		selfState{value: 5210}
+}
+
+if vel y > 0 && pos y >= cond(anim = [5051, 5059] || anim = [5061, 5069], 0, const(movement.air.gethit.groundlevel)) {
 	changeState{value: 5100}
 }
 
 #-------------------------------------------------------------------------------
 # Tripped get-hit (shaking)
-[StateDef 5070; type: A; moveType: H; physics: N; velSet: 0, 0;]
+[StateDef 5070; type: A; movetype: H; physics: N; velset: 0, 0;]
 
 changeAnim{value: 5070}
 if hitShakeOver {
@@ -881,7 +897,7 @@ if time = 0 {
 
 #-------------------------------------------------------------------------------
 # Tripped get-hit (knocked away)
-[StateDef 5071; type: A; moveType: H; physics: N;]
+[StateDef 5071; type: A; movetype: H; physics: N;]
 
 if time = 0 {
 	hitVelSet{x: 1; y: 1}
@@ -899,7 +915,7 @@ let ret = cond($cond && selfAnimExist($base + anim % 10),
 
 #-------------------------------------------------------------------------------
 # Downed get-hit (shaking)
-[StateDef 5080; type: L; moveType: H; physics: N; velSet: 0, 0;]
+[StateDef 5080; type: L; movetype: H; physics: N; velset: 0, 0;]
 
 if time = 0 {
 	sysVar(2) := ifElse(getHitVar(yVel) = 0, 5080, 5090);
@@ -922,7 +938,7 @@ if hitShakeOver {
 
 #-------------------------------------------------------------------------------
 # Downed get-hit (knocked back)
-[StateDef 5081; type: L; moveType: H; physics: C;]
+[StateDef 5081; type: L; movetype: H; physics: C;]
 
 if time = 0 {
 	hitVelSet{x: 1}
@@ -938,10 +954,10 @@ if hitOver {
 if majorVersion = 1 {
 	explod{
 		anim: F(60 + ($vely > const240p(5)) + ($vely > const240p(14)));
-		posType: none; #p1
+		postype: none; #p1
 		pos: pos x + cameraPos x, 0; #0, 0
 		facing: facing;
-		sprPriority: ifElse($vely <= const240p(14), -10, 10);
+		sprpriority: ifElse($vely <= const240p(14), -10, 10);
 	}
 } else {
 	gameMakeAnim{
@@ -954,7 +970,7 @@ playSnd{value: F7, ($vely > const240p(5)) + ($vely > const240p(14))}
 
 #-------------------------------------------------------------------------------
 # Downed get-hit (hit ground from fall)
-[StateDef 5100; type: L; moveType: H; physics: N;]
+[StateDef 5100; type: L; movetype: H; physics: N;]
 
 if time = 0 {
 	if majorVersion != 1 && getHitVar(fall.yVel) = 0 && vel x > 1 {
@@ -986,7 +1002,7 @@ if time = 0 {
 
 #-------------------------------------------------------------------------------
 # Downed get-hit (bounce off ground)
-[StateDef 5101; type: L; moveType: H; physics: N;]
+[StateDef 5101; type: L; movetype: H; physics: N;]
 
 if time = 0 {
 	let a = call SelfAnimExistAddMod10(anim = [5101, 5109], 5160);
@@ -1004,7 +1020,7 @@ if vel y > 0 && pos y >= const(movement.down.bounce.groundlevel) {
 
 #-------------------------------------------------------------------------------
 # Downed get-hit (lying down)
-[StateDef 5110; type: L; moveType: H; physics: N;]
+[StateDef 5110; type: L; movetype: H; physics: N;]
 
 persistent(0) if selfAnimExist(5110 + anim % 10) && anim = [5081, 5089] {
 	changeAnim{value: 5110 + anim % 10}
@@ -1041,7 +1057,7 @@ if time = 0 {
 	sysVar(0) := 0;
 }
 velMul{x: .85}
-if majorVersion = 1 && abs(vel x) < const(movement.down.friction.threshold) {
+if abs(vel x) < const(movement.down.friction.threshold) {
 	velSet{x: 0}
 }
 if time = 0 {
@@ -1054,7 +1070,7 @@ if time = 0 {
 
 #-------------------------------------------------------------------------------
 # Downed get-hit (getting up)
-[StateDef 5120; type: L; moveType: I; physics: N;]
+[StateDef 5120; type: L; movetype: I; physics: N;]
 
 if time = 0 {
 	let a = call SelfAnimExistAddMod10(anim = [5111, 5119], 5120);
@@ -1071,7 +1087,7 @@ if animTime = 0 {
 
 #-------------------------------------------------------------------------------
 # Downed get-hit (lying defeated)
-[StateDef 5150; type: L; moveType: H; physics: N; sprPriority: -3; ctrl: 0;]
+[StateDef 5150; type: L; movetype: H; physics: N; sprpriority: -3; ctrl: 0;]
 
 if time = 0 {
 	let a = call SelfAnimExistAddMod10(anim = [5111, 5119] ||
@@ -1095,7 +1111,7 @@ notHitBy{value: SCA; time: 1}
 
 #-------------------------------------------------------------------------------
 # Air get-hit (fall recovery on ground; still falling)
-[StateDef 5200; type: A; moveType: H; physics: N;]
+[StateDef 5200; type: A; movetype: H; physics: N;]
 
 if anim = 5035 && animTime = 0 {
 	changeAnim{value: 5050}
@@ -1109,7 +1125,7 @@ if vel y > 0 && pos y >= const(movement.air.gethit.groundrecover.groundlevel) {
 
 #-------------------------------------------------------------------------------
 # Air get-hit (fall recovery on ground)
-[StateDef 5201; type: A; moveType: H; physics: A; anim: 5200;]
+[StateDef 5201; type: A; movetype: H; physics: A; anim: 5200;]
 
 if time = 0 {
 	if p2Dist x < const240p(-5) {
@@ -1122,9 +1138,14 @@ if time = 0 {
 	posSet{y: 0}
 	palFx{time: 3; add: 128, 128, 128}
 	if majorVersion = 1 {
-		explod{anim: F60; posType: none;
-			pos: pos x + cameraPos x, pos y - floor(vel y);
-			facing: facing; sprPriority: -10}
+		explod{
+			anim: F60;
+			postype: none;
+			pos: pos x + cameraPos x,
+			pos y - floor(vel y);
+			facing: facing;
+			sprpriority: -10
+		}
 	}
 } else if time = 1 && majorVersion != 1 {
 	gameMakeAnim{value: 60; pos: 0, 0; under: 1}
@@ -1133,10 +1154,16 @@ notHitBy{value: SCA; time: 1}
 
 #-------------------------------------------------------------------------------
 # Air get-hit (fall recovery in air)
-[StateDef 5210; type: A; moveType: I; physics: N; anim: 5210; ctrl: 0;]
+[StateDef 5210; type: A; movetype: I; physics: N; anim: 5210; ctrl: 0;]
 
 if time = 0 {
 	palFx{time: 3; add: 128, 128, 128}
+	if command = "up" || command = "holdup"  {
+		mapSet{map:"airJumpInput"; value: 1}
+	}
+	else{
+		mapSet{map:"airJumpInput"; value: 0}
+	}
 	posFreeze{}
 	if p2Dist x < const240p(-20) {
 		turn{}
@@ -1148,13 +1175,9 @@ if time = 0 {
 	}
 } else {
 	if time = 4 {
-		if majorVersion = 1 {
-			velMul{
-				x: const(velocity.air.gethit.airrecover.mul.x);
-				y: const(velocity.air.gethit.airrecover.mul.y);
-			}
-		} else {
-			velMul{x: .8; y: .8}
+		velMul{
+			x: const(velocity.air.gethit.airrecover.mul.x);
+			y: const(velocity.air.gethit.airrecover.mul.y);
 		}
 		velAdd{
 			x: const(velocity.air.gethit.airrecover.add.x);
@@ -1230,29 +1253,31 @@ mapSet{map: "trainingIsALow"; value: 0}
 }
 
 IgnoreHitPause{
-if command = "holdback"{
-MapSet{map: "DIdirX"; value: -1}
-}
-else if command = "holdfwd"{
-MapSet{map: "DIdirX"; value: 1}
-}
-else{
-MapSet{map: "DIdirX"; value: 0}
+	if command = "holdback"{
+	MapSet{map: "DIdirX"; value: -1}
+	}
+	else if command = "holdfwd"{
+	MapSet{map: "DIdirX"; value: 1}
+	}
+	else{
+	MapSet{map: "DIdirX"; value: 0}
+	}
+
+	if command = "holdup"{
+	MapSet{map: "DIdirY"; value: 1}
+	}
+	else if command = "holddown"{
+	MapSet{map: "DIdirY"; value: -1}
+	}
+	else{
+	MapSet{map: "DIdirY"; value: 0}
+	}
 }
 
-if command = "holdup"{
-MapSet{map: "DIdirY"; value: 1}
-}
-else if command = "holddown"{
-MapSet{map: "DIdirY"; value: -1}
-}
-else{
-MapSet{map: "DIdirY"; value: 0}
-}
-}
 
 
-DisplayToClipboard{text: "dir X %f dir Y %f"; params: Map(DIdirX), Map(DIdirY)}
+
+DisplayToClipboard{text: "dir X %f dir Y %f"; params: vel X, vel Y}
 
 IgnoreHitPause{
 	if GameMode = "training"{

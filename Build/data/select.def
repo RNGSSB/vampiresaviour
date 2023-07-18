@@ -186,7 +186,7 @@
  ;
  ;Insert your characters below.
 
-SOL, stages/kfm.def
+SOL, stages/mvcclock/XX'CLOCK'2'XX_16_9.def
 randomselect
 
 ;-------------------------------------------------------------------------------

@@ -41,13 +41,13 @@ if command = "QCF_y" && $canCombo {
 
 #-------------------------------------------------------------------------------
 #Run Fwd
-if (command = "FF" || Map(z) && command != "holdback") && stateType != A && ctrl && stateNo != 100 {
+if (command = "FF" || Map(b) && command != "holdback") && stateType != A && ctrl && stateNo != 100 {
 	changeState{value: 100}
 }
 
 #-------------------------------------------------------------------------------
 #Run Back
-if (command = "BB" || Map(z) && command = "holdback" ) && stateType = S && ctrl {
+if (command = "BB" || Map(b) && command = "holdback" ) && stateType = S && ctrl {
 	changeState{value: 105}
 }
 
@@ -71,6 +71,7 @@ if stateNo = 200 || stateNo = 210 || stateNo = 230 || stateNo = 240 || stateNo =
 || stateNo = 600 || stateNo = 610 || stateNo = 630 || stateNo = 640{
 call JumpCancel();
 }
+
 #Air Jump
 if stateType = A && ctrl && map(airJumpCount) > 0 && map(airJumpInput) != 1{
 	if command = "holdup" {
@@ -96,7 +97,7 @@ if stateType = A && ctrl{
 }
 
 #Air Dash Forward
-if ((Map(FF) || command = "holdfwd" && Map(z)|| command != "holdfwd" && Map(z)) && facing = 1 || (Map(FF) || command = "holdback" && Map(b)|| command != "holdback" && Map(z)) && facing = -1) 
+if ((Map(FF) || command = "holdfwd" && Map(b)|| command != "holdfwd" && Map(b)) && facing = 1 || (Map(FF) || command = "holdback" && Map(b)|| command != "holdback" && Map(b)) && facing = -1) 
 && command != "holdback" && stateType = A && ctrl && map(airJumpCount) != 0 && command != "holddown" {
 	if pos Y < -50 && vel y < 0 || vel y > 0{
 		changeState{value: 110}
@@ -104,7 +105,7 @@ if ((Map(FF) || command = "holdfwd" && Map(z)|| command != "holdfwd" && Map(z)) 
 }
 
 #Air Dash Back
-if (Map(BB) || command = "holdback" && Map(z)) && stateType = A && ctrl && map(airJumpCount) != 0 && command != "holddown" {
+if (Map(BB) || command = "holdback" && Map(b)) && stateType = A && ctrl && map(airJumpCount) != 0 && command != "holddown" {
 	if pos Y < -50 && vel y < 0 || vel y > 0 {
 		changeState{value: 115}
 	} 
@@ -127,7 +128,7 @@ if map(airDashMacroBuffer) = 1 && map(airDashMacroDirection) = 0 && stateType = 
 }
 
 #Bufferd Button IAD Check
-if Map(z) && (stateNo = 50 || stateNo = 53 || stateNo = 40) && time <= 10 {
+if Map(b) && (stateNo = 50 || stateNo = 53 || stateNo = 40) && time <= 10 {
 	mapSet{map:"airDashMacroBuffer"; value: 1}
 	
 	if command = "holdback"{
@@ -147,7 +148,7 @@ if stateType = A && ctrl{
 }
 
 #Throw Tech xd
-if ctrl && (Map(x) || Map(y) || Map(a) || Map(b)) && Map(ThrowTechBuffer) != 1{
+if ctrl && (Map(x) || Map(y) || Map(z) || Map(a)) && Map(ThrowTechBuffer) != 1{
 	MapSet{map: "ThrowTechBuffer"; value: 1}
 	MapSet{map: "TechTimer"; value: gameTime}
 }
@@ -178,34 +179,34 @@ if map(xa) &&
 }
 
 #-------------------------------------------------------------------------------
-#Stand Light Punch
+#5A
 if map(x) && command != "holddown" &&
 	((stateType = S && ctrl) ||
-		(stateNo = 200 && animElemTime(3) > 0)) {
+		((stateNo = 200 || stateNo = 400) && moveContact)) {
 	changeState{value: 200}
 }
 
 #-------------------------------------------------------------------------------
-#Stand Strong Punch
+#5B
 if map(y) && command != "holddown" &&
 	((stateType = S && ctrl) ||
-		((stateNo = 200 || stateNo = 230 || stateNo = 430 || stateNo = 400) && animElemTime(3) > 0)) {
+		((stateNo = 200 || stateNo = 400 || stateNo = 410) && moveContact)) {
 	changeState{value: 210}
 }
 
 #-------------------------------------------------------------------------------
-#Stand Light Kick
-if map(a) &&Command != "holddown" &&
+#5C
+if map(z) &&Command != "holddown" &&
 	((stateType = S && ctrl) ||
-		((stateNo = 200 || stateNo = 400 || stateNo = 430) && animElemTime(3) > 0)) {
+		((stateNo = 200 || stateNo = 400 || stateNo = 410 || stateNo = 210) && moveContact)) {
 	changeState{value: 230}
 }
 
 #-------------------------------------------------------------------------------
-#Standing Strong Kick
-if map(b) &&Command != "holddown" &&
+#5D
+if map(a) &&Command != "holddown" &&
 	((stateType = S && ctrl) ||
-		((stateNo = 200 || stateNo = 230 || stateNo = 210 || stateNo = 400 || stateNo = 430 || stateNo = 410) && animElemTime(3) > 0)) {
+		((stateNo = 200 || stateNo = 230 || stateNo = 210 || stateNo = 400 || stateNo = 430 || stateNo = 410) && moveContact)) {
 	changeState{value: 240}
 }
 
@@ -216,32 +217,32 @@ if command = "start" && command != "holddown" && stateType != A && ctrl {
 }
 
 #-------------------------------------------------------------------------------
-#Crouching Light Punch
-if map(x) && command = "holddown" && stateType = C && ctrl {
+#2A
+if map(x) && command = "holddown" && 
+((stateType = C && ctrl) ||
+		((stateNo = 400) && moveContact)) {
 	changeState{value: 400}
 }
 
 #-------------------------------------------------------------------------------
-#Crouching Strong Punch
+#2B
 if map(y) && command = "holddown" &&
 	((stateType = C && ctrl) ||
-		(stateNo = 400 && animElemTime(2) > 0) ||
-		((stateNo = 430 || stateNo = 230 || stateNo = 210 || stateNo = 200 || stateNo = 400) && moveContact && animElemTime(3) > 0)) {
+		((stateNo = 210 || stateNo = 200 || stateNo = 400) && moveContact)) {
 	changeState{value: 410}
 }
 
 #-------------------------------------------------------------------------------
-#Crouching Light Kick
-if map(a) && command = "holddown" &&
+#2C
+if map(z) && command = "holddown" &&
 	((stateType = C && ctrl) ||
-		(stateNo = 400 && animElemTime(2) > 0) ||
-		((stateNo = 430|| stateNo = 230|| stateNo = 200 || stateNo = 400) && moveContact && animElemTime(3) > 0)) {
+		((stateNo = 200 || stateNo = 400 || stateNo = 410 || stateNo = 210) && moveContact && animElemTime(3) > 0)) {
 	changeState{value: 430}
 }
 
 #-------------------------------------------------------------------------------
-#Crouching Strong Kick
-if map(b) && command = "holddown" &&
+#2D
+if map(a) && command = "holddown" &&
 	((stateType = C && ctrl) ||
 		(stateNo = 400 && animElemTime(2) > 0) ||
 		((stateNo = 430 || stateNo = 410 || stateNo = 200 || stateNo = 210 || stateNo = 230 || stateNo = 400) && moveContact && animElemTime(3) > 0)) {
@@ -249,35 +250,35 @@ if map(b) && command = "holddown" &&
 }
 
 #-------------------------------------------------------------------------------
-#Jump Light Punch
+#jA
 if map(x) &&
 	((stateType = A && ctrl) ||
-		(stateNo = 600 && animElemTime(2) > 0) ||
+		(stateNo = 600 && moveContact) ||
 		stateNo = 1350) { #Air blocking
 	changeState{value: 600}
 }
 
 #-------------------------------------------------------------------------------
-#Jump Strong Punch
+#jB
 if map(y) &&
 	((stateType = A && ctrl) ||
-		((stateNo = 600 || stateNo = 630) && moveContact) || #jump_x or jump_a
+		((stateNo = 600) && moveContact) || #jump_x or jump_a
 		stateNo = 1350) { #Air blocking
 	changeState{value: 610}
 }
 
 #-------------------------------------------------------------------------------
-#Jump Light Kick
-if map(a) &&
+#jC
+if map(z) &&
 	((stateType = A && ctrl) ||
-	((stateNo = 600) && moveContact) ||
+	((stateNo = 600 || stateNo = 610) && moveContact) ||
 		stateNo = 1350) { #Air blocking
 	changeState{value: 630}
 }
 
 #-------------------------------------------------------------------------------
-#Jump Strong Kick
-if map(b) &&
+#jD
+if map(a) &&
 	((stateType = A && ctrl) ||
 		((stateNo = 600 || stateNo = 630 || stateNo = 610) && moveContact) || #jump_x or jump_a
 		stateNo = 1350) { #Air blocking
