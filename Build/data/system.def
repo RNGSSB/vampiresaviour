@@ -1590,11 +1590,68 @@ movelist.arrow.down.scale = 1.0, 1.0
 ;-------------------------------------------------------------------
 ;Training menu screen definition
 [Training Info] ;Ikemen feature
+menu.valuename.dummycontrol.cooperative = "Cooperative"
+	menu.valuename.dummycontrol.ai = "AI"
+	menu.valuename.dummycontrol.manual = "Manual"
+	menu.valuename.ailevel.1 = "1"
+	menu.valuename.ailevel.2 = "2"
+	menu.valuename.ailevel.3 = "3"
+	menu.valuename.ailevel.4 = "4"
+	menu.valuename.ailevel.5 = "5"
+	menu.valuename.ailevel.6 = "6"
+	menu.valuename.ailevel.7 = "7"
+	menu.valuename.ailevel.8 = "8"
+	menu.valuename.guardmode.none = "None"
+	menu.valuename.guardmode.auto = "Auto"
+	menu.valuename.guardmode.high = "High"
+	menu.valuename.guardmode.low = "Low"
+	menu.valuename.mashoption.idle = "Idle"
+	menu.valuename.mashoption.counter = "Counter"
+	menu.valuename.dummymode.stand = "Stand"
+	menu.valuename.dummymode.crouch = "Crouch"
+	menu.valuename.dummymode.jump = "Jump"
+	menu.valuename.dummymode.wjump = "W Jump"
+	menu.valuename.distance.any = "Any"
+	menu.valuename.distance.close = "Close"
+	menu.valuename.distance.medium = "Medium"
+	menu.valuename.distance.far = "Far"
+	menu.valuename.buttonjam.none = "None"
+	menu.valuename.buttonjam.a = "A"
+	menu.valuename.buttonjam.b = "B"
+	menu.valuename.buttonjam.c = "C"
+	menu.valuename.buttonjam.x = "X"
+	menu.valuename.buttonjam.y = "Y"
+	menu.valuename.buttonjam.z = "Z"
+	menu.valuename.buttonjam.s = "Start"
+	menu.valuename.buttonjam.d = "D"
+	menu.valuename.buttonjam.w = "W"
 
-; If not overridden, values used for [Menu Info] are shared with [Training Info]
-; If custom menus are not declared, default menu screen layout is loaded.
-; Refer to system.base.def for an example how to modify pause screen menus.
+	; https://github.com/ikemen-engine/Ikemen-GO/wiki/Screenpack-features#submenus
+	; If custom menu is not declared, following menu is loaded by default:
+	menu.itemname.back = "Continue"
+	menu.itemname.menutraining = "Training Menu"
+	menu.itemname.menutraining.dummycontrol = "Dummy Control"
+	menu.itemname.menutraining.ailevel = "AI Level"
+	menu.itemname.menutraining.guardmode = "Guard Mode"
+	menu.itemname.menutraining.dummymode = "Dummy Mode"
+	menu.itemname.menutraining.distance = "Distance"
+	menu.itemname.menutraining.buttonjam = "Button Jam"
+	menu.itemname.menutraining.mashoption = "Mash Option"
+	menu.itemname.menutraining.back = "Back"
+	menu.itemname.menuinput = "Button Config"
+	menu.itemname.menuinput.keyboard = "Key Config"
+	menu.itemname.menuinput.gamepad = "Joystick Config"
+	menu.itemname.menuinput.empty = ""
+	menu.itemname.menuinput.inputdefault = "Default"
+	menu.itemname.menuinput.back = "Back"
+	menu.itemname.commandlist = "Command List"
+	menu.itemname.characterchange = "Character Change"
+	menu.itemname.reload = "Rematch"
+	menu.itemname.exit = "Exit"
 
+	; Unassigned menu items:
+	;menu.itemname.reset = "Round Reset"
+		
 ;-------------------
 ;Training menu screen background
 ;[TrainingBGdef] ;Ikemen feature

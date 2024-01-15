@@ -1,0 +1,203 @@
+[StateDef -1]
+#============|IF roundState = 2|================================================
+if roundState = 2 && !aiLevelF { #prevent attacks outside of fight state
+
+#===============================================================================
+#Resource Reset
+if stateType = S || stateType = C {
+mapSet{map:"airJumpCount"; value: 1;}
+}
+
+#Super Jump
+#if Map(cdu) && ((ctrl && stateType != A) || (stateNo = 100 || stateNo = 40)) {
+#	changeState{value: 41}
+#}
+
+#Air Jump
+if stateType = A && ctrl && map(airJumpCount) > 0 && map(airJumpInput) != 1{
+	if command = "holdup" {
+		changeState{value: 46}
+	}
+}
+
+#Has pressed up for ground jump
+if stateNo = 40 || stateNo = 46 {
+	if command = "up" || command = "holdup"  {
+		mapSet{map:"airJumpInput"; value: 1}
+	}
+	else{
+		mapSet{map:"airJumpInput"; value: 0}
+	}
+}
+
+#Has stopped pressing any up direction while jumping
+if stateType = A && ctrl{
+	if (command = "release_up"|| command = "release_upfwd" || command = "release_upback") && command != "holdup"   {
+		mapSet{map:"airJumpInput"; value: 0}
+	}
+}
+#-------------------------------------------------------------------------------
+#Run Fwd
+if (Map(FF) || Map(c) && command != "holdback") && stateType != A && ctrl && stateNo != 100 {
+	changeState{value: 100}
+}
+#-------------------------------------------------------------------------------
+#Run Back
+if (Map(BB) || Map(c) && command = "holdback") && (stateType != A && ctrl || stateNo = 100) {
+	changeState{value: 105}
+}
+#-------------------------------------------------------------------------------
+#Air Dash Forward
+if (Map(FF) || Map(c) && command != "holdback") 
+&& stateType = A && ctrl && map(airJumpCount) != 0 {
+	if pos Y < -50 && vel y < 0 || vel y > 0{
+		changeState{value: 110}
+	}
+}
+
+#-------------------------------------------------------------------------------
+#Hi parry
+if map(b) && command != "holddown" && command != "holdfwd" && command != "holdback" &&
+	((stateType = S && ctrl) || stateNo = 100)  {
+	changeState{value: 700}
+}
+
+#-------------------------------------------------------------------------------
+#Low parry
+if map(b) && command = "holddown" && command != "holdfwd" && command != "holdback" &&
+	((stateType = C && ctrl) || stateNo = 100)  {
+	changeState{value: 710}
+}
+
+#-------------------------------------------------------------------------------
+#Air Parry
+if map(b) &&
+	(stateType = A && (ctrl))  {
+	changeState{value: 720}
+}
+
+#-------------------------------------------------------------------------------
+#Roll
+if map(b) && command = "holdfwd" &&
+	(stateType != A && (ctrl || stateNo = 100))  {
+	changeState{value: 730}
+}
+
+#-------------------------------------------------------------------------------
+#Roll Back
+if map(b) && command = "holdback" &&
+	(stateType != A && (ctrl || stateNo = 100))  {
+	changeState{value: 735}
+}
+
+
+#-------------------------------------------------------------------------------
+#Throw
+if Map(a) && (command = "holdfwd" || command = "holdback") &&
+	(stateType = S && (ctrl || stateNo = 100)) {
+	changeState{value: 800}
+}
+
+#5L
+if Map(x) && command != "holddown" &&
+	(stateType = S && (ctrl || stateNo = 100)) {
+	changeState{value: 200}
+}
+
+#-------------------------------------------------------------------------------
+#f5M
+if Map(y) && command != "holddown" &&
+	((stateType = S && (ctrl || stateNo = 100))  
+	|| ((stateNo = 215 || stateNo = 410) && moveContact)) && p2Dist X > 60 {
+	changeState{value: 210}
+}
+#-------------------------------------------------------------------------------
+#c5M
+if Map(y) && command != "holddown" &&
+	((stateType = S && (ctrl || stateNo = 100)) || (stateNo = 410 && moveContact)) && p2Dist X <= 60 {
+	changeState{value: 215}
+}
+
+
+#-------------------------------------------------------------------------------
+#f5H
+if Map(z) && command != "holddown" &&
+	((stateType = S && (ctrl || stateNo = 100)) 
+	|| ((stateNo = 215 || stateNo = 235 || stateNo = 410) && moveContact)) && p2Dist X > 60  {
+	changeState{value: 230}
+}
+
+#-------------------------------------------------------------------------------
+#c5H
+if Map(z) && command != "holddown" &&
+	((stateType = S && (ctrl || stateNo = 100)) || (stateNo = 410 && moveContact)) && p2Dist X <= 60 {
+	changeState{value: 235}
+}
+
+
+#-------------------------------------------------------------------------------
+#Taunt
+if command = "start" && command != "holddown" && stateType != A && ctrl {
+	changeState{value: 195}
+}
+
+#-------------------------------------------------------------------------------
+#2L
+if Map(x) && command = "holddown" 
+&& (stateType = C && ctrl || stateNo = 100) {
+	changeState{value: 400}
+}
+
+#-------------------------------------------------------------------------------
+#2M
+if Map(y) && command = "holddown" 
+&& (stateType = C && ctrl || stateNo = 100)  
+{
+	changeState{value: 410}
+}
+
+#-------------------------------------------------------------------------------
+#2H
+if Map(z) && command = "holddown" 
+&& (stateType = C && ctrl || stateNo = 100)  {
+	changeState{value: 430}
+}
+
+#-------------------------------------------------------------------------------
+#2H
+if Map(a) && command = "holddown" 
+&& (stateType = C && ctrl || stateNo = 100)  {
+	changeState{value: 450}
+}
+
+#-------------------------------------------------------------------------------
+#j5L
+if Map(x) &&
+	((stateType = A && ctrl) ||
+		stateNo = 1350) { #Air blocking
+	changeState{value: 600}
+}
+
+#-------------------------------------------------------------------------------
+#j5M
+if Map(y) &&
+	((stateType = A && ctrl) ||
+		((stateNo = 600) && moveContact) || #jump_x or jump_a
+		stateNo = 1350) { #Air blocking
+	changeState{value: 610}
+}
+
+#-------------------------------------------------------------------------------
+#j5H
+if Map(z) &&
+	((stateType = A && ctrl) ||
+		((stateNo = 600 || stateNo = 610 ) && moveContact) || #jump_x or jump_a
+		stateNo = 1350) { #Air blocking
+	changeState{value: 630}
+}
+
+#-------------------------------------------------------------------------------
+
+#End of file: roundState = 2
+#===============================================================================
+}

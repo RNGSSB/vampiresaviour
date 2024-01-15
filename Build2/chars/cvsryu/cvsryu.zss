@@ -1,0 +1,1338 @@
+#ZSS language: https://github.com/ikemen-engine/Ikemen-GO/wiki/ZSS
+#ZSS syntax highlighter for Notepad++: https://github.com/ikemen-engine/zss_npp
+#-------------------------------------------------------------------------------
+#Commenting in ZSS
+#You may notice that the ";" character is now replaced with the "#" character.
+#This is because ";" is now used to separate parameters in sctrls rather than a
+#blank space.
+
+#===============================================================================
+# Functions
+#===============================================================================
+#Used to avoid repeating change state code to reference returning to state 0 or
+#11 if crouching. $type is used to specify if it's standing or crouching.
+#1 - crouching
+#0 - standing
+[Function EndState(type)]
+if animTime = 0 {
+	changeState{value: 11 * $type; ctrl: roundState > 1}
+}
+
+#-------------------------------------------------------------------------------
+#Used to call system sounds from the screenpack
+[Function SysSnd(b, s, c)]
+playSnd{value: F $b, $s; channel: $c}
+
+#-------------------------------------------------------------------------------
+#Used to call sounds coming from this character
+[Function CSnd(bank, sound, c)]
+playSnd{value: S $bank, $sound; channel: $c}
+
+#-------------------------------------------------------------------------------
+#Used to apply palFx during EX moves
+[Function EXFX(time)]
+palFx{time: $time; add: 32, 16, 0; sinadd: 64, 32, 5, 3}
+
+[Function AttackLevel0()]
+mapSet{map: "attackDamage"; value: 8} #Damage on hit
+mapset{map: "chipDamage"; value: 3}	#Damage on block
+mapSet{map: "hitStop"; value: 8} #Amount of hitstop frames for both players
+mapSet{map: "hitPriority"; value: 1} #If this value is higher than the opponents, then it will beat them out
+mapSet{map: "hitStunAmount"; value: 14} #Amount of time spent in hitstun
+mapSet{map: "hitFlags"; value: 0} #0 = MAF, 1 = HAF (Whiffs on crouchers), 2 = LAF (Whiffs on standing), 3 = AF (Air only), 4 = MAFD (Hits all for supers), 5 = D (Only hits hard knockdown)
+mapSet{map: "guardFlags"; value: 0} #0 = MA (Blocked by everything), 1= M (Block all ground, hit in air), 2 = L (Block Low), 3 = H (Block High), 4 = HA (Block high and air for air attacks)
+mapSet{map: "untechTime"; value: 14} #Amount of time before you can tech in the air
+mapSet{map: "blockStunAmount"; value: 11} #amount of blockstun
+mapSet{map: "hitSparkNum"; value: 0} #What hit spark to use
+mapSet{map: "sparkPosX"; value: -10} #The X position
+mapSet{map: "sparkPosY"; value: -76} #Y Position
+mapSet{map: "attackSoundGroup"; value: 5}  #Sound on hit
+mapSet{map: "attackSoundIndex"; value: 0} 
+mapSet{map: "guardSoundGroup"; value: 6} #Sound on block
+mapSet{map: "guardSoundIndex"; value: 0} 
+mapSet{map: "groundPushbackX"; value: -4} #Velocity applied to enemy on ground hit
+mapSet{map: "groundPushbackY"; value: 0}
+mapSet{map: "hitSlideTime"; value: 5} #how much time the enemy slides back after getting hit
+mapSet{map: "airPushbackX"; value: -1.4} #Velocity applied to enemy on air hit
+mapSet{map: "airPushbackY"; value: -4}
+mapSet{map: "groundGuardPushbackX"; value: -4} #Block pushback
+mapSet{map: "guardSlideTime"; value: 5} #how much time the enemy slides back after blocking
+mapSet{map: "airGuardPushbackX"; value: -1.9} #Air block pushback
+mapSet{map: "airGuardPushbackY"; value: -0.8}
+mapSet{map: "hardKnockDown"; value: 0}	#If opponent goes into hard knockdown
+mapSet{map: "hardKnockDownRecover"; value: 0}
+mapSet{map: "AttackKill"; value: 1} #Does the attack kill or not
+mapSet{map: "GuardKill"; value: 1}	#Does chip damage kill
+mapSet{map: "animationType"; value: 0} #0 = light, 1 = medium, 2 = hard, 3 = back, 4 = up, 5 = diagup
+mapSet{map: "animationTypeAir"; value: 0} #0 = light, 1 = medium, 2 = hard, 3 = back, 4 = up, 5 = diagup
+mapSet{map: "groundType"; value: 0} #0 = High, 1 = Low, 2 = Trip
+mapSet{map: "airType"; value: 0} #0 = High, 1 = Low, 2 = Trip
+mapSet{map: "directionMultiplierX"; value: 1.5}
+mapSet{map: "directionMultiplierY"; value: 1.1}
+mapSet{map: "gravityFreeHits"; value: 3}
+
+[Function AttackLevel1()]
+mapSet{map: "attackDamage"; value: 10} #Damage on hit
+mapset{map: "chipDamage"; value: 4}	#Damage on block
+mapSet{map: "hitStop"; value: 10} #Amount of hitstop frames for both players
+mapSet{map: "hitPriority"; value: 1} #If this value is higher than the opponents, then it will beat them out
+mapSet{map: "hitStunAmount"; value: 16} #Amount of time spent in hitstun
+mapSet{map: "hitFlags"; value: 0} #0 = MAF, 1 = HAF (Whiffs on crouchers), 2 = LAF (Whiffs on standing), 3 = AF (Air only), 4 = MAFD (Hits all for supers), 5 = D (Only hits hard knockdown)
+mapSet{map: "guardFlags"; value: 0} #0 = MA (Blocked by everything), 1= M (Block all ground, hit in air), 2 = L (Block Low), 3 = H (Block High), 4 = HA (Block high and air for air attacks)
+mapSet{map: "untechTime"; value: 16} #Amount of time before you can tech in the air
+mapSet{map: "blockStunAmount"; value: 11} #amount of blockstun
+mapSet{map: "hitSparkNum"; value: 0} #What hit spark to use
+mapSet{map: "sparkPosX"; value: -10} #The X position
+mapSet{map: "sparkPosY"; value: -76} #Y Position
+mapSet{map: "attackSoundGroup"; value: 5}  #Sound on hit
+mapSet{map: "attackSoundIndex"; value: 1} 
+mapSet{map: "guardSoundGroup"; value: 6} #Sound on block
+mapSet{map: "guardSoundIndex"; value: 0} 
+mapSet{map: "groundPushbackX"; value: -4} #Velocity applied to enemy on ground hit
+mapSet{map: "groundPushbackY"; value: 0}
+mapSet{map: "hitSlideTime"; value: 5} #how much time the enemy slides back after getting hit
+mapSet{map: "airPushbackX"; value: -1.4} #Velocity applied to enemy on air hit
+mapSet{map: "airPushbackY"; value: -4}
+mapSet{map: "groundGuardPushbackX"; value: -4} #Block pushback
+mapSet{map: "guardSlideTime"; value: 5} #how much time the enemy slides back after blocking
+mapSet{map: "airGuardPushbackX"; value: -1.9} #Air block pushback
+mapSet{map: "airGuardPushbackY"; value: -0.8}
+mapSet{map: "hardKnockDown"; value: 0}	#If opponent goes into hard knockdown
+mapSet{map: "hardKnockDownRecover"; value: 0}
+mapSet{map: "AttackKill"; value: 1} #Does the attack kill or not
+mapSet{map: "GuardKill"; value: 1}	#Does chip damage kill
+mapSet{map: "animationType"; value: 0} #0 = light, 1 = medium, 2 = hard, 3 = back, 4 = up, 5 = diagup
+mapSet{map: "animationTypeAir"; value: 0} #0 = light, 1 = medium, 2 = hard, 3 = back, 4 = up, 5 = diagup
+mapSet{map: "groundType"; value: 0} #0 = High, 1 = Low, 2 = Trip
+mapSet{map: "airType"; value: 0} #0 = High, 1 = Low, 2 = Trip
+mapSet{map: "directionMultiplierX"; value: 1.5}
+mapSet{map: "directionMultiplierY"; value: 1.1}
+mapSet{map: "gravityFreeHits"; value: 3}
+
+[Function AttackLevel2()]
+mapSet{map: "attackDamage"; value: 30} #Damage on hit
+mapset{map: "chipDamage"; value: 4}	#Damage on block
+mapSet{map: "hitStop"; value: 13} #Amount of hitstop frames for both players
+mapSet{map: "hitPriority"; value: 1} #If this value is higher than the opponents, then it will beat them out
+mapSet{map: "hitStunAmount"; value: 18} #Amount of time spent in hitstun
+mapSet{map: "hitFlags"; value: 0} #0 = MAF, 1 = HAF (Whiffs on crouchers), 2 = LAF (Whiffs on standing), 3 = AF (Air only), 4 = MAFD (Hits all for supers), 5 = D (Only hits hard knockdown)
+mapSet{map: "guardFlags"; value: 0} #0 = MA (Blocked by everything), 1= M (Block all ground, hit in air), 2 = L (Block Low), 3 = H (Block High), 4 = HA (Block high and air for air attacks)
+mapSet{map: "untechTime"; value: 18} #Amount of time before you can tech in the air
+mapSet{map: "blockStunAmount"; value: 15} #amount of blockstun
+mapSet{map: "hitSparkNum"; value: 0} #What hit spark to use
+mapSet{map: "sparkPosX"; value: -10} #The X position
+mapSet{map: "sparkPosY"; value: -76} #Y Position
+mapSet{map: "attackSoundGroup"; value: 5}  #Sound on hit
+mapSet{map: "attackSoundIndex"; value: 2} 
+mapSet{map: "guardSoundGroup"; value: 6} #Sound on block
+mapSet{map: "guardSoundIndex"; value: 1} 
+mapSet{map: "groundPushbackX"; value: -4} #Velocity applied to enemy on ground hit
+mapSet{map: "groundPushbackY"; value: 0}
+mapSet{map: "hitSlideTime"; value: 5} #how much time the enemy slides back after getting hit
+mapSet{map: "airPushbackX"; value: -1.4} #Velocity applied to enemy on air hit
+mapSet{map: "airPushbackY"; value: -4}
+mapSet{map: "groundGuardPushbackX"; value: -4} #Block pushback
+mapSet{map: "guardSlideTime"; value: 5} #how much time the enemy slides back after blocking
+mapSet{map: "airGuardPushbackX"; value: -1.9} #Air block pushback
+mapSet{map: "airGuardPushbackY"; value: -0.8}
+mapSet{map: "hardKnockDown"; value: 0}	#If opponent goes into hard knockdown
+mapSet{map: "hardKnockDownRecover"; value: 0}
+mapSet{map: "AttackKill"; value: 1} #Does the attack kill or not
+mapSet{map: "GuardKill"; value: 1}	#Does chip damage kill
+mapSet{map: "animationType"; value: 0} #0 = light, 1 = medium, 2 = hard, 3 = back, 4 = up, 5 = diagup
+mapSet{map: "animationTypeAir"; value: 0} #0 = light, 1 = medium, 2 = hard, 3 = back, 4 = up, 5 = diagup
+mapSet{map: "groundType"; value: 0} #0 = High, 1 = Low, 2 = Trip
+mapSet{map: "airType"; value: 0} #0 = High, 1 = Low, 2 = Trip
+mapSet{map: "directionMultiplierX"; value: 1.5}
+mapSet{map: "directionMultiplierY"; value: 1.1}
+mapSet{map: "gravityFreeHits"; value: 3}
+
+[Function AttackLevel3()]
+mapSet{map: "attackDamage"; value: 35} #Damage on hit
+mapset{map: "chipDamage"; value: 5}	#Damage on block
+mapSet{map: "hitStop"; value: 16} #Amount of hitstop frames for both players
+mapSet{map: "hitPriority"; value: 1} #If this value is higher than the opponents, then it will beat them out
+mapSet{map: "hitStunAmount"; value: 20} #Amount of time spent in hitstun
+mapSet{map: "hitFlags"; value: 0} #0 = MAF, 1 = HAF (Whiffs on crouchers), 2 = LAF (Whiffs on standing), 3 = AF (Air only), 4 = MAFD (Hits all for supers), 5 = D (Only hits hard knockdown)
+mapSet{map: "guardFlags"; value: 0} #0 = MA (Blocked by everything), 1= M (Block all ground, hit in air), 2 = L (Block Low), 3 = H (Block High), 4 = HA (Block high and air for air attacks)
+mapSet{map: "untechTime"; value: 20} #Amount of time before you can tech in the air
+mapSet{map: "blockStunAmount"; value: 15} #amount of blockstun
+mapSet{map: "hitSparkNum"; value: 0} #What hit spark to use
+mapSet{map: "sparkPosX"; value: -10} #The X position
+mapSet{map: "sparkPosY"; value: -76} #Y Position
+mapSet{map: "attackSoundGroup"; value: 5}  #Sound on hit
+mapSet{map: "attackSoundIndex"; value: 2} 
+mapSet{map: "guardSoundGroup"; value: 6} #Sound on block
+mapSet{map: "guardSoundIndex"; value: 3} 
+mapSet{map: "groundPushbackX"; value: -4} #Velocity applied to enemy on ground hit
+mapSet{map: "groundPushbackY"; value: 0}
+mapSet{map: "hitSlideTime"; value: 5} #how much time the enemy slides back after getting hit
+mapSet{map: "airPushbackX"; value: -1.4} #Velocity applied to enemy on air hit
+mapSet{map: "airPushbackY"; value: -4}
+mapSet{map: "groundGuardPushbackX"; value: -4} #Block pushback
+mapSet{map: "guardSlideTime"; value: 5} #how much time the enemy slides back after blocking
+mapSet{map: "airGuardPushbackX"; value: -1.9} #Air block pushback
+mapSet{map: "airGuardPushbackY"; value: -0.8}
+mapSet{map: "hardKnockDown"; value: 0}	#If opponent goes into hard knockdown
+mapSet{map: "hardKnockDownRecover"; value: 0}
+mapSet{map: "AttackKill"; value: 1} #Does the attack kill or not
+mapSet{map: "GuardKill"; value: 1}	#Does chip damage kill
+mapSet{map: "animationType"; value: 0} #0 = light, 1 = medium, 2 = hard, 3 = back, 4 = up, 5 = diagup
+mapSet{map: "animationTypeAir"; value: 0} #0 = light, 1 = medium, 2 = hard, 3 = back, 4 = up, 5 = diagup
+mapSet{map: "groundType"; value: 0} #0 = High, 1 = Low, 2 = Trip
+mapSet{map: "airType"; value: 0} #0 = High, 1 = Low, 2 = Trip
+mapSet{map: "directionMultiplierX"; value: 1.5}
+mapSet{map: "directionMultiplierY"; value: 1.1}
+mapSet{map: "gravityFreeHits"; value: 3}
+
+[Function AttackLevel4()]
+mapSet{map: "attackDamage"; value: 40} #Damage on hit
+mapset{map: "chipDamage"; value: 6}	#Damage on block
+mapSet{map: "hitStop"; value: 18} #Amount of hitstop frames for both players
+mapSet{map: "hitPriority"; value: 1} #If this value is higher than the opponents, then it will beat them out
+mapSet{map: "hitStunAmount"; value: 22} #Amount of time spent in hitstun
+mapSet{map: "hitFlags"; value: 0} #0 = MAF, 1 = HAF (Whiffs on crouchers), 2 = LAF (Whiffs on standing), 3 = AF (Air only), 4 = MAFD (Hits all for supers), 5 = D (Only hits hard knockdown)
+mapSet{map: "guardFlags"; value: 0} #0 = MA (Blocked by everything), 1= M (Block all ground, hit in air), 2 = L (Block Low), 3 = H (Block High), 4 = HA (Block high and air for air attacks)
+mapSet{map: "untechTime"; value: 22} #Amount of time before you can tech in the air
+mapSet{map: "blockStunAmount"; value: 15} #amount of blockstun
+mapSet{map: "hitSparkNum"; value: 0} #What hit spark to use
+mapSet{map: "sparkPosX"; value: -10} #The X position
+mapSet{map: "sparkPosY"; value: -76} #Y Position
+mapSet{map: "attackSoundGroup"; value: 5}  #Sound on hit
+mapSet{map: "attackSoundIndex"; value: 4} 
+mapSet{map: "guardSoundGroup"; value: 6} #Sound on block
+mapSet{map: "guardSoundIndex"; value: 2} 
+mapSet{map: "groundPushbackX"; value: -4} #Velocity applied to enemy on ground hit
+mapSet{map: "groundPushbackY"; value: 0}
+mapSet{map: "hitSlideTime"; value: 5} #how much time the enemy slides back after getting hit
+mapSet{map: "airPushbackX"; value: -1.4} #Velocity applied to enemy on air hit
+mapSet{map: "airPushbackY"; value: -4}
+mapSet{map: "groundGuardPushbackX"; value: -4} #Block pushback
+mapSet{map: "guardSlideTime"; value: 5} #how much time the enemy slides back after blocking
+mapSet{map: "airGuardPushbackX"; value: -1.9} #Air block pushback
+mapSet{map: "airGuardPushbackY"; value: -0.8}
+mapSet{map: "hardKnockDown"; value: 0}	#If opponent goes into hard knockdown
+mapSet{map: "hardKnockDownRecover"; value: 0}
+mapSet{map: "AttackKill"; value: 1} #Does the attack kill or not
+mapSet{map: "GuardKill"; value: 1}	#Does chip damage kill
+mapSet{map: "animationType"; value: 0} #0 = light, 1 = medium, 2 = hard, 3 = back, 4 = up, 5 = diagup
+mapSet{map: "animationTypeAir"; value: 0} #0 = light, 1 = medium, 2 = hard, 3 = back, 4 = up, 5 = diagup
+mapSet{map: "groundType"; value: 0} #0 = High, 1 = Low, 2 = Trip
+mapSet{map: "airType"; value: 0} #0 = High, 1 = Low, 2 = Trip
+mapSet{map: "directionMultiplierX"; value: 1.5}
+mapSet{map: "directionMultiplierY"; value: 1.1}
+mapSet{map: "gravityFreeHits"; value: 3}
+
+[Function Init5A()]
+mapSet{map: "trainingIsALow"; value: 0}
+
+[Function Init5B()]
+mapSet{map: "trainingIsALow"; value: 0}
+
+[Function Init5C()]
+mapSet{map: "trainingIsALow"; value: 0}
+
+[Function Init5D()]
+mapSet{map: "trainingIsALow"; value: 0}
+
+[Function Init2A()]
+mapSet{map: "trainingIsALow"; value: 0}
+
+[Function Init2B()]
+mapSet{map: "trainingIsALow"; value: 0}
+
+[Function Init2C()]
+mapSet{map: "trainingIsALow"; value: 0}
+
+[Function Init2D()]
+mapSet{map: "trainingIsALow"; value: 0}
+
+[Function InitjA()]
+mapSet{map: "trainingIsALow"; value: 0}
+
+[Function InitjB()]
+mapSet{map: "trainingIsALow"; value: 0}
+
+[Function InitjC()]
+mapSet{map: "trainingIsALow"; value: 0}
+
+[Function InitjD()]
+mapSet{map: "trainingIsALow"; value: 0}
+
+[Function JumpCancel()]
+IgnoreHitPause{
+if moveContact && command = "holdup"  { 
+	if (stateType != A ){
+		mapSet{map: "trainingIsALow"; value: 0}
+		changeState{value: 40}
+	}
+	
+	#if (Map(CDU) || command = "holdup" && Map(h_a)) && stateType != A {
+	#changeState{value: 6100}
+	#}
+
+	if (statetype = A && map(airJumpCount) > 0) {
+	mapSet{map: "trainingIsALow"; value: 0}
+	changeState{value: 46}
+	}
+}
+}
+
+#===============================================================================
+# Walk Override
+#===============================================================================
+[StateDef 20; type: S; physics: S; sprpriority: 0;]
+
+if command = "holdback"&& !aiLevelF || aiLevelF && map(AIw) = -1 {
+	velSet{x: const(velocity.walk.back.x)}
+} else if command = "holdfwd" && !aiLevelF || aiLevelF && map(AIw) = 1 {
+	velSet{x: const(velocity.walk.fwd.x)}
+}
+if vel x > 0 {
+	if cond(anim = 5, animTime = 0, anim != 20) {
+		changeAnim{value: 20}
+	}
+} else if vel x < 0 {
+	if cond(anim = 5, animTime = 0, anim != 21) {
+		changeAnim{value: 21}
+	}
+}
+
+#===============================================================================
+# Lose by Time Over
+#===============================================================================
+# ZSS difficulty: basic
+#This is how statedefs are defined in ZSS. It must always end with a ";" or it
+#will result in a crash. 
+[StateDef 170;
+type: S; movetype: I; physics: S;
+anim: 170; ctrl: 0; velset: 0, 0;
+sprpriority: 1;]
+
+#If you used a trigger that normally read "trigger1 = 1" you can just declare
+#the sctrl with no condition like below.
+notHitBy{value: SCA; time: 1}
+
+#===============================================================================
+# Win state decider
+#===============================================================================
+# ZSS difficulty: basic
+[StateDef 180;
+type: S; movetype: I; physics: S;
+anim: -2; ctrl: 0; velset: 0, 0;
+sprpriority: 1;]
+
+changeState{value: 181; ctrl: 0}
+
+#===============================================================================
+# win pose 1 - Bow
+#===============================================================================
+# ZSS difficulty: basic
+[StateDef 181;
+type: S; movetype: I; physics: S;
+anim: 181; ctrl: 0; velset: 0, 0;
+sprpriority: 1;]
+
+#trigger is replaced with a simple "if". All conditions can be handled the same
+#with multiple if blocks. Optional Assert roundnotover
+if animTime < -2 {
+	assertSpecial{flag: roundnotover}
+}
+
+notHitBy{value: SCA; time: 1}
+
+#===============================================================================
+# Introduction
+#===============================================================================
+# ZSS difficulty: basic
+[StateDef 191;
+type: S; movetype: I; physics: S;
+anim: 190; ctrl: 0; velset: 0, 0;
+sprpriority: 1;]
+
+if roundState = 0 {
+	changeAnim{value: 190}
+}
+
+#Assert this until you want "round 1, fight" to begin
+assertSpecial{flag: intro}
+
+#You can delete the following two controllers if you're building your own
+#character using KFM. These are the wood pieces that KFM kicks. This is how
+#persistent = 0 is applied, if this were an sctrl that has no trigger, the
+#persistent(0) would be that trigger e.g. persistent(0){sctrl{}}
+persistent(0) if roundState != 0 {
+	explod{
+		anim: 191;
+		postype: p1;
+		pos: 260, -90;
+		velocity: -4.2, -7;
+		accel: 0, .32;
+		removetime: 48;
+	}
+}
+
+if animElemTime(7) = 1 {
+	explod{
+		anim: 192;
+		postype: p1;
+		pos: 60, -70;
+		velocity: 2, -4;
+		accel: 0, .32;
+		removetime: 35;
+	}
+}
+
+#You can delete the following two controllers if you're building your own
+#character using KFM. These play back the sounds of the wood block being broken.
+if animElem = 7 {
+	#It is worth mentioning that if you want to use the rest of the parameters
+	#a playSnd uses, you can use it just the same as below:
+	# Playsnd{value: F5, 2; channel: 1; volume: -40}
+	call SysSnd(5, 2, 1);
+}
+
+if animElemTime(7) = 3 {
+	call SysSnd(5, 3, 2);
+}
+
+#Change to stand state when done
+call EndState(0);
+
+#-------------------------------------------------------------------------------
+[StateDef 195;
+type: S; movetype: I; physics: S;
+anim: 195; ctrl: 0; velset: 0, 0;
+sprpriority: 2;]
+
+if time = 40 {
+	ctrlSet{value: 1}
+}
+
+#Change to stand state when done
+call EndState(0);
+
+#===============================================================================
+# 5L
+#===============================================================================
+[StateDef 200;
+type: S;                              #State-type: S-stand, C-crouch, A-air, L-liedown
+movetype: A;                          #Move-type: A-attack, I-idle, H-gethit
+physics: S;                           #Physics: S-stand, C-crouch, A-air
+                            #Number of air juggle points move takes
+#Commonly-used controllers:
+ctrl: 0;                              #Set ctrl (Def: no change)
+anim: 200;                            #Change animation (Def: no change)
+poweradd: 10;                         #Power to add (Def: 0)
+sprpriority: 2;]                      #Set p1's sprite layering priority to 2 (in front)
+
+if time = 0{
+	call AttackLevel1();
+	call Init5A();
+	MapSet{map: "attackDamage";value: 10;}
+	mapSet{map: "airPushbackX"; value: -2;}
+	mapSet{map: "airPushbackY"; value: -4;}
+}
+
+if animElem = 3 { 
+	#When using zss sctrls, you must have the bracket on the same line as the
+	#sctrl's name as specified below e.g. "HitDef{"
+	hitDef{
+		attr: S, NA;                 
+		damage: map(attackDamage);                
+		animtype: Light;             
+		guardflag: M;        
+		hitflag: MAF;             
+		priority: map(hitPriority), Hit;                     
+		pausetime: map(hitStop), map(hitStop);             
+		sparkno: map(hitSparkNum);                   
+		sparkxy: map(sparkPosX), map(sparkPosY);                                           
+		hitsound: map(attackSoundGroup), map(attackSoundIndex);               
+		guardsound: map(guardSoundGroup), map(guardSoundIndex);             
+		ground.type: High;                   
+		ground.hittime: map(hitStunAmount);  
+		air.hittime: map(untechTime); 
+		guard.hittime: map(blockStunAmount);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY); 
+		ground.slidetime: map(hitSlideTime);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY);
+		air.velocity: map(airPushbackX), map(airPushbackY);
+		guard.velocity: map(groundGuardPushbackX);
+		guard.slidetime: map(guardSlideTime);
+		airguard.velocity: map(airGuardPushbackX), map(airGuardPushbackY); 
+		air.type: High;  
+		fall: map(hardKnockDown);
+		fall.recover: map(hardKnockDownRecover);
+		kill: map(AttackKill);
+		guard.kill: map(GuardKill); yaccel: map(comboGravity);
+	}
+}
+
+if time = 1 {
+	#It is worth mentioning that if you want to use the rest of the parameters
+	#a playSnd uses, you can use it just the same as below:
+	# Playsnd{value: S0, 0; channel: 1}
+	call CSnd(0, 0, 1);
+}
+
+#Change to stand state when done
+call EndState(0);
+
+#===============================================================================
+# f5M
+#===============================================================================
+[StateDef 210;
+type: S; movetype: A; physics: S;
+ poweradd: 30; ctrl: 0;
+anim: 220;
+sprpriority: -1;]
+
+if animElemTime(2) >= 0 && animElemTime(7) < 0 {
+	width{value: 15, 0}
+}
+
+if time = 0{
+	call AttackLevel2();
+	call Init5B();
+	mapSet{map: "airPushbackX"; value: -2;}
+	mapSet{map: "airPushbackY"; value: -6;}
+}
+
+if time = 2 {
+	#It is worth mentioning that if you want to use the rest of the parameters
+	#a playSnd uses, you can use it just the same as below:
+	# Playsnd{value: S0, 4; channel: 1}
+	call CSnd(0, 4, 1);
+}
+
+if animElem = 3 {
+	hitDef{
+		attr: S, NA;                 
+		damage: map(attackDamage);                
+		animtype: Light;             
+		guardflag: M;        
+		hitflag: MAF;             
+		priority: map(hitPriority), Hit;                     
+		pausetime: map(hitStop), map(hitStop);             
+		sparkno: map(hitSparkNum);                   
+		sparkxy: map(sparkPosX), map(sparkPosY);                                           
+		hitsound: map(attackSoundGroup), map(attackSoundIndex);               
+		guardsound: map(guardSoundGroup), map(guardSoundIndex);             
+		ground.type: High;                   
+		ground.hittime: map(hitStunAmount);  
+		air.hittime: map(untechTime); 
+		guard.hittime: map(blockStunAmount);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY); 
+		ground.slidetime: map(hitSlideTime);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY);
+		air.velocity: map(airPushbackX), map(airPushbackY);
+		guard.velocity: map(groundGuardPushbackX);
+		guard.slidetime: map(guardSlideTime);
+		airguard.velocity: map(airGuardPushbackX), map(airGuardPushbackY); 
+		air.type: High;  
+		fall: map(hardKnockDown);
+		fall.recover: map(hardKnockDownRecover);
+		kill: map(AttackKill);
+		guard.kill: map(GuardKill); yaccel: map(comboGravity);
+	}
+}
+
+if animElem = 5 {
+	sprPriority{value: 2}
+}
+
+#Change to stand state when done
+call EndState(0);
+
+#===============================================================================
+# c5M
+#===============================================================================
+[StateDef 215;
+type: S; movetype: A; physics: S;
+ poweradd: 30; ctrl: 0; anim: 221;
+sprpriority: -1;]
+
+if animElemTime(2) >= 0 && animElemTime(7) < 0 {
+	width{value: 15, 0}
+}
+
+if time = 0{
+	call AttackLevel2();
+	call Init5B();
+	mapSet{map: "airPushbackX"; value: -2;}
+	mapSet{map: "airPushbackY"; value: -6;}
+}
+
+if time > 0{
+call JumpCancel();
+}
+
+if time = 2 {
+	#It is worth mentioning that if you want to use the rest of the parameters
+	#a playSnd uses, you can use it just the same as below:
+	# Playsnd{value: S0, 4; channel: 1}
+	call CSnd(0, 4, 1);
+}
+
+if animElem = 3 {
+	hitDef{
+		attr: S, NA;                 
+		damage: map(attackDamage);                
+		animtype: Light;             
+		guardflag: M;        
+		hitflag: MAF;             
+		priority: map(hitPriority), Hit;                     
+		pausetime: map(hitStop), map(hitStop);             
+		sparkno: map(hitSparkNum);                   
+		sparkxy: map(sparkPosX), map(sparkPosY);                                           
+		hitsound: map(attackSoundGroup), map(attackSoundIndex);               
+		guardsound: map(guardSoundGroup), map(guardSoundIndex);             
+		ground.type: High;                   
+		ground.hittime: map(hitStunAmount);  
+		air.hittime: map(untechTime); 
+		guard.hittime: map(blockStunAmount);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY); 
+		ground.slidetime: map(hitSlideTime);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY);
+		air.velocity: map(airPushbackX), map(airPushbackY);
+		guard.velocity: map(groundGuardPushbackX);
+		guard.slidetime: map(guardSlideTime);
+		airguard.velocity: map(airGuardPushbackX), map(airGuardPushbackY); 
+		air.type: High;  
+		fall: map(hardKnockDown);
+		fall.recover: map(hardKnockDownRecover);
+		kill: map(AttackKill);
+		guard.kill: map(GuardKill); yaccel: map(comboGravity);
+	}
+}
+
+if animElem = 5 {
+	sprPriority{value: 2}
+}
+
+#Change to stand state when done
+call EndState(0);
+
+#===============================================================================
+# f5H
+#===============================================================================
+# ZSS difficulty: easy
+[StateDef 230;
+type: S; movetype: A; physics: S;
+ poweradd: 11; ctrl: 0;
+anim: 250;
+sprpriority: 2;]
+
+if time = 2 {
+	call CSnd(0, 0, 1);
+}
+
+if time = 0{
+	call AttackLevel3();
+	call Init5C();
+	mapSet{map: "airPushbackX"; value: -2;}
+	mapSet{map: "airPushbackY"; value: -8;}
+}
+
+if animElem = 3 {
+	hitDef{
+		attr: S, NA;                 
+		damage: map(attackDamage);                
+		animtype: Light;             
+		guardflag: M;        
+		hitflag: MAF;             
+		priority: map(hitPriority), Hit;                     
+		pausetime: map(hitStop), map(hitStop);             
+		sparkno: map(hitSparkNum);                   
+		sparkxy: map(sparkPosX), map(sparkPosY);                                           
+		hitsound: map(attackSoundGroup), map(attackSoundIndex);               
+		guardsound: map(guardSoundGroup), map(guardSoundIndex);             
+		ground.type: High;                   
+		ground.hittime: map(hitStunAmount);  
+		air.hittime: map(untechTime); 
+		guard.hittime: map(blockStunAmount);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY); 
+		ground.slidetime: map(hitSlideTime);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY);
+		air.velocity: map(airPushbackX), map(airPushbackY);
+		guard.velocity: map(groundGuardPushbackX);
+		guard.slidetime: map(guardSlideTime);
+		airguard.velocity: map(airGuardPushbackX), map(airGuardPushbackY); 
+		air.type: High;  
+		fall: map(hardKnockDown);
+		fall.recover: map(hardKnockDownRecover);
+		kill: map(AttackKill);
+		guard.kill: map(GuardKill); yaccel: map(comboGravity);
+	}
+}
+
+#Change to stand state when done
+call EndState(0);
+
+#===============================================================================
+# f5H
+#===============================================================================
+# ZSS difficulty: easy
+[StateDef 235;
+type: S; movetype: A; physics: S;
+ poweradd: 11; ctrl: 0; anim: 251;
+sprpriority: 2;]
+
+if time = 2 {
+	call CSnd(0, 0, 1);
+}
+
+if time = 0{
+	call AttackLevel3();
+	call Init5C();
+}
+
+if animElem = 3 {
+	hitDef{
+		attr: S, NA;                 
+		damage: map(attackDamage);                
+		animtype: Light;             
+		guardflag: M;        
+		hitflag: MAF;             
+		priority: map(hitPriority), Hit;                     
+		pausetime: map(hitStop), map(hitStop);             
+		sparkno: map(hitSparkNum);                   
+		sparkxy: map(sparkPosX), map(sparkPosY);                                           
+		hitsound: map(attackSoundGroup), map(attackSoundIndex);               
+		guardsound: map(guardSoundGroup), map(guardSoundIndex);             
+		ground.type: High;                   
+		ground.hittime: map(hitStunAmount);  
+		air.hittime: map(untechTime); 
+		guard.hittime: map(blockStunAmount);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY); 
+		ground.slidetime: map(hitSlideTime);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY);
+		air.velocity: map(airPushbackX), map(airPushbackY);
+		guard.velocity: map(groundGuardPushbackX);
+		guard.slidetime: map(guardSlideTime);
+		airguard.velocity: map(airGuardPushbackX), map(airGuardPushbackY); 
+		air.type: High;  
+		fall: map(hardKnockDown);
+		fall.recover: map(hardKnockDownRecover);
+		kill: map(AttackKill);
+		guard.kill: map(GuardKill); yaccel: map(comboGravity);
+	}
+}
+
+if animElem = 5 {
+	hitDef{
+		attr: S, NA;                 
+		damage: map(attackDamage);                
+		animtype: Light;             
+		guardflag: M;        
+		hitflag: MAF;             
+		priority: map(hitPriority), Hit;                     
+		pausetime: map(hitStop), map(hitStop);             
+		sparkno: map(hitSparkNum);                   
+		sparkxy: map(sparkPosX), map(sparkPosY);                                           
+		hitsound: map(attackSoundGroup), map(attackSoundIndex);               
+		guardsound: map(guardSoundGroup), map(guardSoundIndex);             
+		ground.type: High;                   
+		ground.hittime: map(hitStunAmount);  
+		air.hittime: map(untechTime); 
+		guard.hittime: map(blockStunAmount);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY); 
+		ground.slidetime: map(hitSlideTime);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY);
+		air.velocity: map(airPushbackX), map(airPushbackY);
+		guard.velocity: map(groundGuardPushbackX);
+		guard.slidetime: map(guardSlideTime);
+		airguard.velocity: map(airGuardPushbackX), map(airGuardPushbackY); 
+		air.type: High;  
+		fall: map(hardKnockDown);
+		fall.recover: map(hardKnockDownRecover);
+		kill: map(AttackKill);
+		guard.kill: map(GuardKill); yaccel: map(comboGravity);
+	}
+}
+
+#Change to stand state when done
+call EndState(0);
+
+#===============================================================================
+# 2L
+#===============================================================================
+[StateDef 400;
+type: C; movetype: A; physics: C;
+ poweradd: 8; ctrl: 0;
+anim: 430; sprpriority: 2;]
+
+if time = 1 {
+	call CSnd(0, 0, 1);
+}
+
+if time = 0{
+	call AttackLevel1();
+	call Init2A();
+}
+
+if animElem = 2 {
+	hitDef{
+		attr: C, NA;                 
+		damage: map(attackDamage);                
+		animtype: Light;             
+		guardflag: L;        
+		hitflag: MAF;             
+		priority: map(hitPriority), Hit;                     
+		pausetime: map(hitStop), map(hitStop);             
+		sparkno: map(hitSparkNum);                   
+		sparkxy: map(sparkPosX), map(sparkPosY);                                           
+		hitsound: map(attackSoundGroup), map(attackSoundIndex);               
+		guardsound: map(guardSoundGroup), map(guardSoundIndex);             
+		ground.type: High;                   
+		ground.hittime: map(hitStunAmount);  
+		air.hittime: map(untechTime); 
+		guard.hittime: map(blockStunAmount);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY); 
+		ground.slidetime: map(hitSlideTime);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY);
+		air.velocity: map(airPushbackX), map(airPushbackY);
+		guard.velocity: map(groundGuardPushbackX);
+		guard.slidetime: map(guardSlideTime);
+		airguard.velocity: map(airGuardPushbackX), map(airGuardPushbackY); 
+		air.type: High;  
+		fall: map(hardKnockDown);
+		fall.recover: map(hardKnockDownRecover);
+		kill: map(AttackKill);
+		guard.kill: map(GuardKill); yaccel: map(comboGravity);
+	}
+}
+
+#This gives control back to kfm early. While this could be done better in a
+#number of ways, this is a 1:1 creation of kfm from elecbyte so this change is
+#left intact.
+if animElemTime(3) = 2 {
+	ctrlSet{value: 1}
+}
+
+#Change to stand state when done
+call EndState(1);
+
+#===============================================================================
+# 2M
+#===============================================================================
+[StateDef 410;
+type: C; movetype: A; physics: C;
+ poweradd: 25; ctrl: 0;
+anim: 440; sprpriority: 2;]
+
+if time = 1 {
+	call CSnd(0, 1, 1);
+}
+
+if time = 0{
+	call AttackLevel2();
+	call Init2B();
+	mapSet{map: "groundPushbackX"; value: 0;}
+	mapSet{map: "groundPushbackY"; value: -6;}
+	mapSet{map: "airPushbackX"; value: 0;}
+	mapSet{map: "airPushbackY"; value: -6;}
+}
+
+#This is the first hit, triggered on the 3rd element of animation.
+if animElem = 3 {
+	hitDef{
+		attr: C, NA;                 
+		damage: map(attackDamage);                
+		animtype: Light;             
+		guardflag: L;        
+		hitflag: MAF;             
+		priority: map(hitPriority), Hit;                     
+		pausetime: map(hitStop), map(hitStop);             
+		sparkno: map(hitSparkNum);                   
+		sparkxy: map(sparkPosX), map(sparkPosY);                                           
+		hitsound: map(attackSoundGroup), map(attackSoundIndex);               
+		guardsound: map(guardSoundGroup), map(guardSoundIndex);             
+		ground.type: High;                   
+		ground.hittime: map(hitStunAmount);  
+		air.hittime: map(untechTime); 
+		guard.hittime: map(blockStunAmount);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY); 
+		ground.slidetime: map(hitSlideTime);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY);
+		air.velocity: map(airPushbackX), map(airPushbackY);
+		guard.velocity: map(groundGuardPushbackX);
+		guard.slidetime: map(guardSlideTime);
+		airguard.velocity: map(airGuardPushbackX), map(airGuardPushbackY); 
+		air.type: High;  
+		fall: map(hardKnockDown);
+		fall.recover: map(hardKnockDownRecover);
+		kill: map(AttackKill);
+		guard.kill: map(GuardKill); yaccel: map(comboGravity);
+	}
+}
+
+
+#Change to stand state when done
+call EndState(1);
+
+#===============================================================================
+# 2H
+#===============================================================================
+# ZSS difficulty: easy
+[StateDef 430;
+type: C; movetype: A; physics: C;
+ poweradd: 11; ctrl: 0;
+anim: 420; sprpriority: 2;]
+
+if time = 1 {
+	call CSnd(0, 0, 1);
+}
+
+if time = 0{
+	call AttackLevel3();
+	call Init2C();
+	mapSet{map: "groundPushbackX"; value: -2;}
+	mapSet{map: "groundPushbackY"; value: -8;}
+	mapSet{map: "airPushbackX"; value: -2;}
+	mapSet{map: "airPushbackY"; value: -8;}
+}
+
+if animElem = 3 {
+	hitDef{
+		attr: C, NA;                 
+		damage: map(attackDamage);                
+		animtype: Light;             
+		guardflag: M;        
+		hitflag: MAF;             
+		priority: map(hitPriority), Hit;                     
+		pausetime: map(hitStop), map(hitStop);             
+		sparkno: map(hitSparkNum);                   
+		sparkxy: map(sparkPosX), map(sparkPosY);                                           
+		hitsound: map(attackSoundGroup), map(attackSoundIndex);               
+		guardsound: map(guardSoundGroup), map(guardSoundIndex);             
+		ground.type: High;                   
+		ground.hittime: map(hitStunAmount);  
+		air.hittime: map(untechTime); 
+		guard.hittime: map(blockStunAmount);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY); 
+		ground.slidetime: map(hitSlideTime);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY);
+		air.velocity: map(airPushbackX), map(airPushbackY);
+		guard.velocity: map(groundGuardPushbackX);
+		guard.slidetime: map(guardSlideTime);
+		airguard.velocity: map(airGuardPushbackX), map(airGuardPushbackY); 
+		air.type: High;  
+		fall: map(hardKnockDown);
+		fall.recover: map(hardKnockDownRecover);
+		kill: map(AttackKill);
+		guard.kill: map(GuardKill); yaccel: map(comboGravity);
+	}
+}
+
+#Change to stand state when done
+call EndState(1);
+
+#===============================================================================
+# 2S
+#===============================================================================
+# ZSS difficulty: easy
+[StateDef 450;
+type: C; movetype: A; physics: C;
+ poweradd: 11; ctrl: 0;
+anim: 450; sprpriority: 2;]
+
+if time = 1 {
+	call CSnd(0, 0, 1);
+}
+
+if time = 0{
+	call AttackLevel3();
+	call Init2D();
+	mapSet{map: "groundPushbackX"; value: 0;}
+	mapSet{map: "groundPushbackY"; value: 0;}
+	mapSet{map: "airPushbackX"; value: -2;}
+	mapSet{map: "airPushbackY"; value: -4;}
+}
+
+if time = 0 {
+	hitDef{
+		attr: C, NA;                 
+		damage: map(attackDamage);                
+		animtype: Light;             
+		guardflag: L;        
+		hitflag: MAF;             
+		priority: map(hitPriority), Hit;                     
+		pausetime: map(hitStop), map(hitStop);             
+		sparkno: map(hitSparkNum);                   
+		sparkxy: map(sparkPosX), map(sparkPosY);                                           
+		hitsound: map(attackSoundGroup), map(attackSoundIndex);               
+		guardsound: map(guardSoundGroup), map(guardSoundIndex);             
+		ground.type: Trip;                   
+		ground.hittime: map(hitStunAmount);  
+		air.hittime: map(untechTime); 
+		guard.hittime: map(blockStunAmount);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY); 
+		ground.slidetime: map(hitSlideTime);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY);
+		air.velocity: map(airPushbackX), map(airPushbackY);
+		guard.velocity: map(groundGuardPushbackX);
+		guard.slidetime: map(guardSlideTime);
+		airguard.velocity: map(airGuardPushbackX), map(airGuardPushbackY); 
+		air.type: High;  
+		fall: map(hardKnockDown);
+		fall.recover: map(hardKnockDownRecover);
+		kill: map(AttackKill);
+		guard.kill: map(GuardKill); yaccel: map(comboGravity);
+	}
+}
+
+#Change to stand state when done
+call EndState(1);
+
+
+#===============================================================================
+# j5L
+#===============================================================================
+[StateDef 600;
+type: A; movetype: A; physics: A;
+ poweradd: 5; ctrl: 0;
+anim: 630; sprpriority: 2;]
+
+if time = 1 {
+	call CSnd(0, 0, 1);
+}
+
+if time = 0{
+call AttackLevel1();
+call InitjA();
+}
+
+if animElem = 2 {
+	hitDef{
+		attr: A, NA;                 
+		damage: map(attackDamage);                
+		animtype: Light;             
+		guardflag: HA;        
+		hitflag: MAF;             
+		priority: map(hitPriority), Hit;                     
+		pausetime: map(hitStop), map(hitStop);             
+		sparkno: map(hitSparkNum);                   
+		sparkxy: map(sparkPosX), map(sparkPosY);                                           
+		hitsound: map(attackSoundGroup), map(attackSoundIndex);               
+		guardsound: map(guardSoundGroup), map(guardSoundIndex);             
+		ground.type: High;                   
+		ground.hittime: map(hitStunAmount);  
+		air.hittime: map(untechTime); 
+		guard.hittime: map(blockStunAmount);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY); 
+		ground.slidetime: map(hitSlideTime);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY);
+		air.velocity: map(airPushbackX), map(airPushbackY);
+		guard.velocity: map(groundGuardPushbackX);
+		guard.slidetime: map(guardSlideTime);
+		airguard.velocity: map(airGuardPushbackX), map(airGuardPushbackY); 
+		air.type: High;  
+		fall: map(hardKnockDown);
+		fall.recover: map(hardKnockDownRecover);
+		kill: map(AttackKill);
+		guard.kill: map(GuardKill); yaccel: map(comboGravity);
+	}
+}
+
+#This gives control back to kfm early. While this could be done better in a
+#number of ways, this is a 1:1 creation of kfm from elecbyte so this change is
+#left intact.
+if animElemTime(3) = 2 {
+	ctrlSet{value: 1}
+}
+
+#===============================================================================
+# j5M
+#===============================================================================
+[StateDef 610;
+type: A; movetype: A; physics: A;
+ poweradd: 30; ctrl: 0;
+anim: 620; sprpriority: 2;]
+
+if time = 2 {
+	call CSnd(0, 1, 1);
+}
+
+if time = 0{
+call AttackLevel2();
+call InitjB();
+}
+
+if animElem = 3 {
+	hitDef{
+		attr: A, NA;                 
+		damage: map(attackDamage);                
+		animtype: Light;             
+		guardflag: HA;        
+		hitflag: MAF;             
+		priority: map(hitPriority), Hit;                     
+		pausetime: map(hitStop), map(hitStop);             
+		sparkno: map(hitSparkNum);                   
+		sparkxy: map(sparkPosX), map(sparkPosY);                                           
+		hitsound: map(attackSoundGroup), map(attackSoundIndex);               
+		guardsound: map(guardSoundGroup), map(guardSoundIndex);             
+		ground.type: High;                   
+		ground.hittime: map(hitStunAmount);  
+		air.hittime: map(untechTime); 
+		guard.hittime: map(blockStunAmount);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY); 
+		ground.slidetime: map(hitSlideTime);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY);
+		air.velocity: map(airPushbackX), map(airPushbackY);
+		guard.velocity: map(groundGuardPushbackX);
+		guard.slidetime: map(guardSlideTime);
+		airguard.velocity: map(airGuardPushbackX), map(airGuardPushbackY); 
+		air.type: High;  
+		fall: map(hardKnockDown);
+		fall.recover: map(hardKnockDownRecover);
+		kill: map(AttackKill);
+		guard.kill: map(GuardKill); yaccel: map(comboGravity);
+	}
+}
+
+#===============================================================================
+# j5H
+#===============================================================================
+[StateDef 630;
+type: A; movetype: A; physics: A;
+ poweradd: 10; ctrl: 0;
+anim: 640; sprpriority: 2;]
+
+if time = 1 {
+	call CSnd(0, 0, 1);
+}
+
+if time = 0{
+call AttackLevel3();
+call InitjC();
+}
+
+if animElem = 2 {
+	hitDef{
+		attr: A, NA;                 
+		damage: map(attackDamage);                
+		animtype: Light;             
+		guardflag: HA;        
+		hitflag: MAF;             
+		priority: map(hitPriority), Hit;                     
+		pausetime: map(hitStop), map(hitStop);             
+		sparkno: map(hitSparkNum);                   
+		sparkxy: map(sparkPosX), map(sparkPosY);                                           
+		hitsound: map(attackSoundGroup), map(attackSoundIndex);               
+		guardsound: map(guardSoundGroup), map(guardSoundIndex);             
+		ground.type: High;                   
+		ground.hittime: map(hitStunAmount);  
+		air.hittime: map(untechTime); 
+		guard.hittime: map(blockStunAmount);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY); 
+		ground.slidetime: map(hitSlideTime);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY);
+		air.velocity: map(airPushbackX), map(airPushbackY);
+		guard.velocity: map(groundGuardPushbackX);
+		guard.slidetime: map(guardSlideTime);
+		airguard.velocity: map(airGuardPushbackX), map(airGuardPushbackY); 
+		air.type: High;  
+		fall: map(hardKnockDown);
+		fall.recover: map(hardKnockDownRecover);
+		kill: map(AttackKill);
+		guard.kill: map(GuardKill); yaccel: map(comboGravity);
+	}
+}
+
+#===============================================================================
+# Grab
+#===============================================================================
+[StateDef 800;
+type: S; movetype: A; physics: S;
+ ctrl: 0;
+anim: 900; sprpriority: 2;]
+
+if time = 0 {
+	hitDef{
+		attr: S, NT;          #Attributes: Standing, Normal Throw
+		hitflag: M-;          #Affect only ground people who are not being hit
+		priority: 1, Miss;    #Throw has low priority, must be miss or dodge type.
+		sparkno: -1;          #No spark
+		p1sprpriority: 1;     #Draw p1's sprite in front of p2
+							  #p2's sprite priority is set to 0 by default
+		p1facing: 1;
+		p2facing: 1;          #Force p2 to face KFM
+		p1stateno: 805;       #On success, KFM changes to state 810
+		p2stateno: 806;       #If hit, p2 changes to state 820 in KFM's ZSS
+		guard.dist: 0;        #This prevents p2 from going into a guard state if close
+		fall: 1;              #Force p2 into falling down
+	}
+}
+
+call EndState(0);
+
+#===============================================================================
+# Kung Fu Throw - Holding Opponent
+#===============================================================================
+[StateDef 805;
+type: S; movetype: A; physics: N;
+anim: 902; poweradd: 0; velset: 0, 0;]
+
+if animElem = 2 {
+	call CSnd(1, 1, 1);
+}
+
+if animElem = 7 {
+	call CSnd(800, 0, 1);
+}
+
+if time >= 0{
+targetBind{pos: 30, 0}
+}
+
+if p2stateno = 840 {
+	changeState{value: 840}
+}
+
+if command = "back" && time > 10 {
+	targetState{value: 822}
+	changeState{value: 811}
+}
+
+if command = "fwd" && time > 10 {
+	targetState{value: 820}
+	changeState{value: 810}
+}
+
+if time > 60{
+targetState{value: 840}
+changeState{value: 840}
+}
+
+#===============================================================================
+# Throw Tech
+#===============================================================================
+[StateDef 840;
+type: S; movetype: A; physics: S;
+anim: 198; poweradd: 0; velset: -7, 0;]
+
+
+if animTime = 0{
+selfState{value: 0; ctrl: 1;}
+}
+
+
+
+
+#===============================================================================
+# Forward Throw
+#===============================================================================
+[StateDef 810;
+type: S; movetype: A; physics: N;
+anim: 901; poweradd: 0; velset: 0, 0;]
+
+if animElem = 2 {
+	call CSnd(1, 1, 1);
+}
+
+if animElem = 7 {
+	call CSnd(800, 0, 1);
+}
+
+if time < 12 {
+	targetBind{pos: -30, 0}
+} 
+if animElemTime(1) >= 0 && animElemTime(2) < 0 {
+	targetBind{pos: -30, 0}
+} 
+if animElemTime(2) >= 0 && animElemTime(3) < 0 {
+	targetBind{pos: -27, -64}
+} 
+if animElemTime(3) >= 0 && animElemTime(4) < 0 {
+	targetBind{pos: -5, -78}
+} 
+if animElemTime(4) >= 0 && animElemTime(5) < 0 {
+	targetBind{pos: 50, -88}
+} 
+if animElemTime(6) >= 0 && animElemTime(7) < 0 {
+	targetBind{pos: 73, -57}
+} 
+if animElemTime(7) >= 0 && animElemTime(8) < 0 {
+	targetBind{pos: 88, -60}
+} 
+
+if animElem = 8 {
+	targetBind{pos: 88, -60}
+	targetLifeAdd{value: -78}
+	targetState{value: 821}
+}
+
+call EndState(0);
+
+#===============================================================================
+# Back Throw
+#===============================================================================
+[StateDef 811;
+type: S; movetype: A; physics: N;
+anim: 911; poweradd: 0; velset: 0, 0;]
+
+if time = 0{
+	Turn{}
+}
+
+if animElem = 2 {
+	call CSnd(1, 1, 1);
+}
+
+if animElem = 7 {
+	call CSnd(800, 0, 1);
+}
+
+if animElemTime(1) >= 0 && animElemTime(2) < 0 {
+	targetBind{pos: -30, 0}
+} 
+if animElemTime(2) >= 0 && animElemTime(3) < 0 {
+	targetBind{pos: -40, -59}
+} 
+if animElemTime(3) >= 0 && animElemTime(4) < 0 {
+	targetBind{pos: -25, -69}
+} 
+if animElemTime(4) >= 0 && animElemTime(5) < 0 {
+	targetBind{pos: 14, -60}
+} 
+if animElemTime(5) >= 0 && animElemTime(6) < 0 {
+	targetBind{pos: 90, -72}
+} 
+if animElemTime(6) >= 0 && animElemTime(7) < 0 {
+	targetBind{pos: 100, -54}
+} 
+
+if animElem = 8 {
+	targetBind{pos: 100, -54}
+	targetLifeAdd{value: -78}
+	targetState{value: 823}
+}
+
+call EndState(0);
+
+
+#===============================================================================
+# Override common states (use same number to override):
+#===============================================================================
+
+
+#===============================================================================
+# States that are always executed (use StateDef -2)
+#===============================================================================
+[StateDef -2]
+
+
+#===============================================================================
+# States that are executed when in self's state file (use StateDef -3)
+#===============================================================================
+[StateDef -3]
+#displayToClipboard{text: "p1cp: %f p2cp: %f"; params: p2BodyDist X,map(jug)}
+
+#Landing Sound
+#This controller plays a sound every time KFM lands from a jump, or back-dash.
+#The code below is another way to represent the structure of
+#triggerall, trigger1, trigger2
+if time = 1 && (stateNo = 52 || stateNo = 106) { #Jump land || Run-back land
+	call CSnd(40, 0, 1);
+}

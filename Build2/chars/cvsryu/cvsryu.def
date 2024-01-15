@@ -1,0 +1,47 @@
+; Definition file for Kung Fu Man
+; Contains all the filenames needed for the character
+
+; Player information
+[Info]
+name = "Kung Fu Man"        ;Name of character
+displayname = "Kung Fu Man" ;Name of character to display
+versiondate = 09,30,2009    ;Version date of character (MM-DD-YYYY or X.XX)
+mugenversion = 1.0          ;Version of M.U.G.E.N character works on (X.XX)
+author = "Elecbyte"         ;Character author name
+pal.defaults = 1,2,3,4      ;Default palettes in order of preference (up to 4)
+                            ;Numbering starts from 1
+localcoord = 320,240        ;Local coordinate space width and height
+
+; Files for the player
+[Files]
+cmd     = cvsryu.cmd           ;Command set
+cns     = cvsryu.const           ;Constants
+st      = cvsryu.zss           ;States
+st2 = hits.zss
+st3 = command.zss
+st4 = AI.zss
+stcommon = common1.cns      ;Common states (from data/ or motif)
+sprite  = cvsryu.sff           ;Sprite
+anim    = cvsryu.air           ;Animation
+sound   = cvsryu.snd           ;Sound
+movelist = movelist.dat     ;Ikemen feature: Movelist
+pal1=act004.act;カプエス2弱Kカラー
+pal2=act005.act;カプエス2中Kカラー
+pal3=act009.act;ストZEROカラー
+pal4=act001.act;カプエス2弱Pカラー
+pal5=act002.act;カプエス2中Pカラー
+pal6=act010.act;スパ2Xスタートカラー
+pal7=act104.act;カプエス2殺意弱Kカラー
+pal8=act105.act;カプエス2殺意中Kカラー
+pal9=act106.act;カプエス2殺意強Kカラー
+pal10=act101.act;カプエス2殺意弱Pカラー
+pal11=act102.act;カプエス2殺意中Pカラー
+pal12=act107.act;カプエス2殺意P同時押しカラー
+
+; Arcade mode
+[Arcade]
+intro.storyboard = intro.def
+ending.storyboard = ending.def
+
+[Map]
+Gravity = 0.35

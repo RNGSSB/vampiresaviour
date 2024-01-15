@@ -1903,6 +1903,10 @@
 	menu.valuename.ailevel.8 = "8"
 	menu.valuename.guardmode.none = "None"
 	menu.valuename.guardmode.auto = "Auto"
+	menu.valuename.guardmode.high = "High"
+	menu.valuename.guardmode.low = "Low"
+	menu.valuename.mashoption.idle = "Idle"
+	menu.valuename.mashoption.counter = "Counter"
 	menu.valuename.dummymode.stand = "Stand"
 	menu.valuename.dummymode.crouch = "Crouch"
 	menu.valuename.dummymode.jump = "Jump"
@@ -1929,6 +1933,7 @@
 	menu.itemname.menutraining.dummycontrol = "Dummy Control"
 	menu.itemname.menutraining.ailevel = "AI Level"
 	menu.itemname.menutraining.guardmode = "Guard Mode"
+	menu.itemname.menutraining.mashoption = "Mash Option"
 	menu.itemname.menutraining.dummymode = "Dummy Mode"
 	menu.itemname.menutraining.distance = "Distance"
 	menu.itemname.menutraining.buttonjam = "Button Jam"
@@ -1944,8 +1949,8 @@
 	menu.itemname.exit = "Exit"
 
 	; Unassigned menu items:
-	;menu.itemname.reset = "Round Reset"
-	;menu.itemname.reload = "Rematch"	
+	menu.itemname.reset = "Round Reset"
+	menu.itemname.reload = "Rematch"	
 
 [TrainingBgDef] ;Ikemen feature
 	spr = ""

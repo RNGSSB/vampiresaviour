@@ -1,0 +1,472 @@
+-- Buffering Lua example file
+-- This file should be in the same folder as the character!
+if tw.debug then print("insert_char_here - buffering.lua Loading...") end
+-- REQUIRED FOR INITIALIZATION LOGIC, DO NOT REMOVE!
+-- ID argument from TW
+local p = ...
+
+-- Extra specials are defined the same here as they are in turtlewaxy.lua
+tw.extraspecials = {
+	i63214_store = {name ='oicho_ST',b_t=0,snk_t=0,tt=9,inputs={tw.right,tw.down+tw.right,tw.down,tw.down+tw.left,tw.left},input_types={tw.hold,tw.press,tw.press,tw.press,tw.multidirectional}, snkonly=-1},
+}
+
+--#region Cancels
+
+-- Define special cancel states and their first inactive frames here.
+-- The attack will no longer be able to cancel once animelemtime(inactive_frame) >= 0
+--
+-- Fields:
+--stateNo - the stateNo the cancel is legal from.
+--inactive_frame - the number of the first animelem after the last animelem of the first hitting attack box.
+--limiter - boolean limiter function, functions the same way as the stateNo table below.
+local special_cancels = {
+	ground = {
+		{ stateNo = 200 },
+		{ stateNo = 210, inactive_frame = 6 },
+		{ stateNo = 215, inactive_frame = 7 },
+		{ stateNo = 230, inactive_frame = 5 }
+	},
+	air = {}
+}
+
+-- Define super cancels here
+local super_cancels = {
+	ground = {
+		{ stateNo = 255, inactive_frame = 8 },
+		{ stateNo = 450, inactive_frame = 5 },
+		-- Anonymous functions are OK too
+		{ stateNo = 1200, limiter=function(p) return movecontact()==1 end }
+	},
+	air = {}
+}
+
+-- Define your renda cancel states here
+local renda_states = {200, 400, 430}
+--#endregion
+
+--#region BASIC FUNCTIONS
+
+--Determines if we can move at all
+--@return boolean
+local function canMove(p)
+	player(p)
+	local stateNo = stateno() -- so we're not calling it 6000 times
+	return ctrl() or (stateNo==100 and animelemtime(2) > 1) or
+	stateNo==101 or stateNo==40  or (stateNo==52 and anim()==47 and time() >= 2)
+end
+
+--Determines if we can whiff cancel
+--@return boolean
+local function canWhiffCancel(p)
+	player(p)
+	local canMove = canMove(p)
+	local stateNo = stateno() -- so we're not calling it 6000 times
+	return canMove or time() < 4 and ((stateNo >= 200 and stateNo <= 299) or (stateNo >= 400 and stateNo <= 499))
+end
+
+-- Checks cancel tables
+--@return boolean
+local function checkCancels(p, t, stateNo)
+	local can_cancel = false
+
+	-- Don't do anything if the table is nil
+	if t ~= nil then
+		local is_air = statetype() == 'A'
+		local cancel_table = is_air and t.air or t.ground
+
+		-- Again, don't do anything if the table is nil
+		if cancel_table ~= nil then
+			for _,v in ipairs(cancel_table) do
+				local f = v.inactive_frame
+				if stateNo == v.stateNo and (not f or animelemtime(f) < 0) and
+				(not v.limiter or v.limiter(p) == true) then
+					can_cancel = true
+					break
+				end
+			end
+		end
+	end
+	return can_cancel
+end
+
+-- Special cancel function
+--@return boolean
+local function canSpecialCancel(p)
+	player(p)
+	local canWC = canWhiffCancel(p)
+	local canSC = canWC or checkCancels(p, player_cancels[p].special_cancels, stateno())
+	return canSC
+end
+
+-- Super cancel function
+--@return boolean
+local function canSuperCancel(p)
+	player(p)
+	local canSC = canSpecialCancel(p)
+	return canSC or checkCancels(p, player_cancels[p].super_cancels, stateno())
+end
+
+-- Power limiter function.
+--@return boolean
+local powerLimiter = function(p)
+	player(p)
+	if power() >= 1000 then
+		-- Can we super cancel?
+		return canSuperCancel(p)
+	end
+end
+
+-- Example SGS limiter function
+--@return boolean
+local sgsLimiter = function(p)
+	player(p)
+	if power() >= 3000 then
+		local canSSC = canSuperCancel(p)
+		local stateNo = stateno()
+		local free_cancel_ok = (stateNo>=200 and stateNo <= 299) or (stateNo>=400 or stateNo<=499)
+		return canSSC or free_cancel_ok
+	end
+end
+
+-- Determines if a Hunter chain is possible
+--@return boolean
+local function canChain(p)
+	player(p)
+	local target_state_no = predictState(p)
+	local stateNo = stateno()
+	local can_move = canMove(p)
+	if can_move then return true end
+	-- Don't chain specials or anything like that
+	if stateNo < 800 and stateNo ~= 300 then
+		if target_state_no > -1 then
+			-- Make sure we can only chain states [200,299], [400,499], and [600,699]
+			if target_state_no < 700 and (math.floor(target_state_no/100)%2) == 0  then
+				-- Get the target stateNo info
+				local trgt_state_mod = target_state_no%100
+				-- Get the current stateNo info
+				local curr_state_mod = stateNo%100
+				local is_ascending = false
+
+				-- Strength must be rising as a whole
+				if trgt_state_mod >= 50 and trgt_state_mod <= 69 then
+					is_ascending = (curr_state_mod >= 0 and curr_state_mod <= 29) or (curr_state_mod >= 30 and curr_state_mod <= 49)
+				elseif trgt_state_mod >= 40 and trgt_state_mod <= 49 then
+					is_ascending = (curr_state_mod >= 0 and curr_state_mod <= 19) or (curr_state_mod >= 30 and curr_state_mod <= 39)
+				elseif trgt_state_mod >= 30 and trgt_state_mod <= 39 then
+					is_ascending = (curr_state_mod >= 0 and curr_state_mod <= 9)
+				elseif trgt_state_mod >= 20 and trgt_state_mod <= 29 then
+					is_ascending = (curr_state_mod >= 0 and curr_state_mod <= 19) or (curr_state_mod >= 30 and curr_state_mod <= 49)
+				elseif trgt_state_mod >= 10 and trgt_state_mod <= 19 then
+					is_ascending = (curr_state_mod >= 0 and curr_state_mod <= 9) or (curr_state_mod >= 30 and curr_state_mod <= 39)
+				end
+
+				local move_contact = movecontact() == 1
+				local is_throw = hitdefattr():match('T') ~= nil
+
+				if is_throw then return false end
+
+				if is_ascending then
+					return move_contact
+				else
+					return stateNo == target_state_no and trgt_state_mod < 10 and move_contact
+				end
+			end
+		end
+	end
+	return false
+end
+
+-- Determines if we can perform a Full Power super (Lvl. 3)
+--@return boolean
+function fpSuperLimiter(p)
+	player(p)
+	if power() >= 3000 then
+		-- We can super cancel?
+		return canSuperCancel(p)
+	end
+	return false
+end
+
+-- shit in Lua works exactly like you'd expect, so we can use this
+-- to make some reasonable predictions
+--@return boolean
+function predictState(p)
+	player(p)
+	local is_air = (statetype() == 'A')
+
+	if is_air then
+		if map('c') > 0 then return 650
+		elseif map('z') > 0 then return 620
+		elseif map('b') > 0 then return 640
+		elseif map('y') > 0 then return 610
+		elseif map('a') > 0 then return 630
+		elseif map('x') > 0 then return 600
+		else return -1 end
+	else
+		if map('h_Dn') > 0 then
+			if map('c') > 0 then return 450
+			elseif map('z') > 0 then return 420
+			elseif map('b') > 0 then return 440
+			elseif map('y') > 0 then return 410
+			elseif map('a') > 0 then return 430
+			elseif map('x') > 0 then return 400
+			else return -1 end
+		else
+			if map('c') > 0 then return map('h_Bk') > 0 and 255 or 250
+			elseif map('z') > 0 then return map('h_Bk') > 0 and 225 or 220
+			elseif map('b') > 0 then return 240
+			elseif map('y') > 0 then return map('h_Fd') > 0 and 215 or 210
+			elseif map('a') > 0 then return 230
+			elseif map('x') > 0 then return 200
+			else return -1 end
+		end
+	end
+end
+
+-- for determining renda cancels
+--@return boolean
+local function canRenda(p)
+	player(p)
+	local target_state_no = predictState(p)
+	local stateNo = stateno()
+	local can_move = canMove(p)
+
+	-- Just return true if we can already move
+	if can_move then return true end
+
+	-- Compare them all
+	for _,trgt_state in ipairs(player_cancels[p].renda_states) do
+		if target_state_no==trgt_state then
+			for _,curr_state in ipairs(player_cancels[p].renda_states) do
+				if stateNo==curr_state then return time() > 3 end
+			end
+		end
+	end
+	return false
+end
+--#endregion
+
+-- Table creation basics:
+--
+-- 1. Each limiter function must take an integer, p, and return a boolean value, true or false
+-- 2. Move strength can be pulled from Map(tw_MoveStrength)
+-- 3. The keys are either map names in the case of directional inputs or integers in the case of the individual button presses.
+-- 4. To create proximity attacks or power checks, create a function to pass in through the limiter parameter that checks for
+--    the distances or power levels you want.
+-- 5. You can have greater control over the priority if you are not satisfied with Lua's default alphabetical sorting by storing
+--    any table key with the cmd_map_name or dir_map_name inside an integer key. The buffering system knows what to do!
+-- 6. Read the general structure below for how to create the table.
+--
+-- return {
+-- 	ground = {
+-- 		super = {
+-- 			['cmd_map_name'] = {
+-- 				[1] = { stateNo = int, button = 'btn_map_name', clear_alike = boolean, limiter = function(p), strength = int },
+--				...
+-- 			}
+-- 		},
+--		special = {
+--			['cmd_map_name'] = {
+--				[1] = { stateNo = int, button = 'btn_map_name', clear_alike = boolean, limiter = function(p), strength = int },
+--				...
+--			}
+--		},
+--		basic = {
+--			['dir_map_name'] = {
+--				[1] = { stateNo = int, button = 'btn_map_name', clear_alike = boolean, limiter = function(p) },
+--				...,
+--
+--				-- to combine two directional inputs (like D and F), just make a subkey with the other dir map name
+--				['dir_map_name2'] = { 
+--					[1] = stateNo = int, button = 'btn_map_name', clear_alike = boolean, limiter = function(p) }
+--				}
+--			},
+--
+--			-- neutral buttons go in their own table at the end of the basic table
+--			-- (make sure no other commands come after alphabetically)
+--			['tw_neutral'] = {
+--				[1] = { stateNo = int, button = 'btn_map_name', limiter = function(p) },
+--			}
+--		}
+-- 	},
+--	air = {
+-- 		super = {
+-- 			['cmd_map_name'] = {
+-- 				[1] = { stateNo = int, button = 'btn_map_name', clear_alike = boolean, limiter = function(p), strength = int },
+--				...
+-- 			}
+-- 		},
+--		special = {
+--			['cmd_map_name'] = {
+--				[1] = { stateNo = int, button = 'btn_map_name', clear_alike = boolean, limiter = function(p), strength = int },
+--				...
+--			}
+--		},
+--		basic = {
+--			['dir_map_name'] = {
+--				[1] = { stateNo = int, button = 'btn_map_name', limiter = function(p) },
+--				...
+--			},
+--
+--			-- neutral buttons go in their own table at the end of the basic table
+--			-- (make sure no other commands come after alphabetically)
+--			['tw_neutral'] = {
+--				[1] = { stateNo = int, button = 'btn_map_name', limiter = function(p) },
+--			}
+--		}
+--	}
+-- }
+
+-- Place any initialization crap you wanna do here (before the return)
+player_cancels[p] = {
+	special_cancels = special_cancels,
+	super_cancels = super_cancels,
+	renda_states = renda_states
+}
+
+return {
+	-- Place ground moves here
+	ground = {
+		-- Super definitions
+		super = {
+			-- Order starts from 1 (highest priority) and goes up (lowest priority)
+			-- this is so we play nice with Lua standards
+			[1] = {
+				['qcfqc'] = {
+					[1]  = { stateNo = 3500, button = 'c',   clear_alike = true, limiter=fpSuperLimiter, strength=2 },
+					[2]  = { stateNo = 3500, button = 'b',   clear_alike = true, limiter=fpSuperLimiter, strength=2 },
+					[3]  = { stateNo = 3500, button = 'a',   clear_alike = true, limiter=fpSuperLimiter, strength=2 },
+					[4]  = { stateNo = 3000, button = 'z',   clear_alike = true, limiter=powerLimiter,   strength=0 },
+					[5]  = { stateNo = 3000, button = 'y',   clear_alike = true, limiter=powerLimiter,   strength=0 },
+					[6]  = { stateNo = 3000, button = 'x',   clear_alike = true, limiter=powerLimiter,   strength=0 },
+					[7]  = { stateNo = 3500, button = 'r_c', clear_alike = true, limiter=fpSuperLimiter, strength=2 },
+					[8]  = { stateNo = 3500, button = 'r_b', clear_alike = true, limiter=fpSuperLimiter, strength=2 },
+					[9]  = { stateNo = 3500, button = 'r_a', clear_alike = true, limiter=fpSuperLimiter, strength=2 },
+					[10] = { stateNo = 3000, button = 'r_z', clear_alike = true, limiter=powerLimiter,   strength=0 },
+					[11] = { stateNo = 3000, button = 'r_y', clear_alike = true, limiter=powerLimiter,   strength=0 },
+					[12] = { stateNo = 3000, button = 'r_x', clear_alike = true, limiter=powerLimiter,   strength=0 }
+				},
+				['qcf'] = {
+					-- this is how multiple button negative edge can be implemented
+					['r_z'] = {
+						[1]  = { stateNo = 3000, button = 'r_y', clear_alike = true, limiter=powerLimiter },
+						[2]  = { stateNo = 3000, button = 'r_x', clear_alike = true, limiter=powerLimiter }
+					},
+					['r_y'] = {
+						[1]  = { stateNo = 3000, button = 'r_z', clear_alike = true, limiter=powerLimiter },
+						[2]  = { stateNo = 3000, button = 'r_x', clear_alike = true, limiter=powerLimiter }
+					},
+					['r_x'] = {
+						[1]  = { stateNo = 3000, button = 'r_z', clear_alike = true, limiter=powerLimiter },
+						[2]  = { stateNo = 3000, button = 'r_y', clear_alike = true, limiter=powerLimiter }
+					}
+				},
+				['SGS6'] = {
+					[1] = { stateNo = 3000, clear_alike = true, limiter=sgsLimiter }
+				}
+			}
+		},
+		-- Special definitions
+		special = {
+			[1] = {
+				-- Taunt
+				[1] = {
+					[1] = { stateNo = 195, button='s', limiter=canSpecialCancel, strength=0 },
+					[2] = { stateNo = 195, button='r_s', imiter=canSpecialCancel, strength=0 }
+				}
+			},
+			[2] = {
+				['dp'] = {
+					[1] = { stateNo = 1500, button = 'z',   clear_alike = true, limiter=canSpecialCancel },
+					[2] = { stateNo = 1500, button = 'y',   clear_alike = true, limiter=canSpecialCancel },
+					[3] = { stateNo = 1500, button = 'x',   clear_alike = true, limiter=canSpecialCancel },
+					[4] = { stateNo = 1500, button = 'r_z', clear_alike = true, limiter=canSpecialCancel },
+					[5] = { stateNo = 1500, button = 'r_y', clear_alike = true, limiter=canSpecialCancel },
+					[6] = { stateNo = 1500, button = 'r_x', clear_alike = true, limiter=canSpecialCancel }
+				}
+			},
+			[3] = {
+				['oicho_ST'] = {
+					[1] = { stateNo = 1100, button = 'z',   clear_alike = true, limiter=canSpecialCancel },
+					[2] = { stateNo = 1100, button = 'y',   clear_alike = true, limiter=canSpecialCancel },
+					[3] = { stateNo = 1100, button = 'x',   clear_alike = true, limiter=canSpecialCancel },
+					[4] = { stateNo = 1100, button = 'r_z', clear_alike = true, limiter=canSpecialCancel },
+					[5] = { stateNo = 1100, button = 'r_y', clear_alike = true, limiter=canSpecialCancel },
+					[6] = { stateNo = 1100, button = 'r_x', clear_alike = true, limiter=canSpecialCancel }
+				}
+			},
+			[4] = {
+				['qcb'] = {
+					[1] = { stateNo = 1400, button = 'c',   clear_alike = true, limiter=canSpecialCancel },
+					[2] = { stateNo = 1400, button = 'b',   clear_alike = true, limiter=canSpecialCancel },
+					[3] = { stateNo = 1400, button = 'a',   clear_alike = true, limiter=canSpecialCancel },
+					[4] = { stateNo = 1400, button = 'r_c', clear_alike = true, limiter=canSpecialCancel },
+					[5] = { stateNo = 1400, button = 'r_b', clear_alike = true, limiter=canSpecialCancel },
+					[6] = { stateNo = 1400, button = 'r_a', clear_alike = true, limiter=canSpecialCancel }
+				}
+			},
+			[5] = {
+				['qcf'] = {
+					[1]  = { stateNo = 1200, button = 'c',   clear_alike = true, limiter=canSpecialCancel },
+					[2]  = { stateNo = 1200, button = 'b',   clear_alike = true, limiter=canSpecialCancel },
+					[3]  = { stateNo = 1200, button = 'a',   clear_alike = true, limiter=canSpecialCancel },
+					[4]  = { stateNo = 1000, button = 'z',   clear_alike = true, limiter=canSpecialCancel },
+					[5]  = { stateNo = 1000, button = 'y',   clear_alike = true, limiter=canSpecialCancel },
+					[6]  = { stateNo = 1000, button = 'x',   clear_alike = true, limiter=canSpecialCancel },
+					[7]  = { stateNo = 1200, button = 'r_c', clear_alike = true, limiter=canSpecialCancel },
+					[8]  = { stateNo = 1200, button = 'r_b', clear_alike = true, limiter=canSpecialCancel },
+					[9]  = { stateNo = 1200, button = 'r_a', clear_alike = true, limiter=canSpecialCancel },
+					[10] = { stateNo = 1000, button = 'r_z', clear_alike = true, limiter=canSpecialCancel },
+					[11] = { stateNo = 1000, button = 'r_y', clear_alike = true, limiter=canSpecialCancel },
+					[12] = { stateNo = 1000, button = 'r_x', clear_alike = true, limiter=canSpecialCancel }
+				}
+			}
+		},
+		-- Basic definitions
+		basic = {
+			['h_Bk'] = {
+				[1] = { stateNo = 255, button = 'c', limiter=canChain },
+				[2] = { stateNo = 225, button = 'z', limiter=canChain }
+			},
+			['h_Fd'] = {
+				[1] = { stateNo = 215, button = 'y', limiter=canChain }
+			},
+			['h_Dn'] = {
+				[1] = { stateNo = 450, button = 'c', limiter=canChain },
+				[2] = { stateNo = 420, button = 'z', limiter=canChain },
+				[3] = { stateNo = 440, button = 'b', limiter=canChain },
+				[4] = { stateNo = 410, button = 'y', limiter=canChain },
+				[5] = { stateNo = 430, button = 'a', limiter=canRenda },
+				[6] = { stateNo = 400, button = 'x', limiter=canRenda }
+			},
+			--Neutral buttons always go at the end
+			['tw_neutral'] = {
+				[1] = { stateNo = 250, button = 'c', limiter=canChain },
+				[2] = { stateNo = 220, button = 'z', limiter=canChain },
+				[3] = { stateNo = 240, button = 'b', limiter=canChain },
+				[4] = { stateNo = 210, button = 'y', limiter=canChain },
+				[5] = { stateNo = 230, button = 'a', limiter=canChain },
+				[6] = { stateNo = 200, button = 'x', limiter=canRenda }
+			},
+		}
+	},
+	-- Place air moves here
+	air = {
+		-- Super definitions
+		super = {},
+		-- Special definitions
+		special = {},
+		-- Basic definitions
+		basic = {
+			-- Neutral buttons always go at the end
+			['tw_neutral'] = {
+				[1] = { stateNo = 650, button = 'c', limiter=canChain },
+				[2] = { stateNo = 620, button = 'z', limiter=canChain },
+				[3] = { stateNo = 640, button = 'b', limiter=canChain },
+				[4] = { stateNo = 610, button = 'y', limiter=canChain },
+				[5] = { stateNo = 630, button = 'a', limiter=canChain },
+				[6] = { stateNo = 600, button = 'x', limiter=canChain }
+			},
+		}
+	}
+}

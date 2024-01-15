@@ -25,7 +25,7 @@ menu.t_valuename = {
 	guardmode = {
 		{itemname = 'none', displayname = motif.training_info.menu_valuename_guardmode_none},
 		{itemname = 'auto', displayname = motif.training_info.menu_valuename_guardmode_auto},
-{itemname = 'high', displayname = motif.training_info.menu_valuename_guardmode_high},
+		{itemname = 'high', displayname = motif.training_info.menu_valuename_guardmode_high},
 		{itemname = 'low', displayname = motif.training_info.menu_valuename_guardmode_low},	
 	},
 	dummymode = {

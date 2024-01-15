@@ -33,13 +33,6 @@ if command = "QCF_x" && $canCombo {
 }
 
 #-------------------------------------------------------------------------------
-#Strong Kung Fu Palm
-if command = "QCF_y" && $canCombo {
-	changeState{value: 1010}
-}
-
-
-#-------------------------------------------------------------------------------
 #Run Fwd
 if (command = "FF" || Map(b) && command != "holdback") && stateType != A && ctrl && stateNo != 100 {
 	changeState{value: 100}
@@ -58,7 +51,7 @@ if map(xy) && stateType = S && (ctrl || (stateNo >= 200 && stateNo <= 440 && tim
 }
 
 #===============================================================================
-#Air Dash Resource Reset
+#Resource Reset
 if stateType = S || stateType = C {
 mapSet{map:"airJumpCount"; value: 1}
 mapSet{map: "airDashAttackBuffer"; value: 0}
@@ -67,7 +60,7 @@ sysVar(1) := 0;
 }
 
 #Jump
-if stateNo = 200 || stateNo = 210 || stateNo = 230 || stateNo = 240 || stateNo = 400 || stateNo = 410 || stateNo = 430 || stateNo = 440
+if stateNo = 210 || stateNo = 230 || stateNo = 430
 || stateNo = 600 || stateNo = 610 || stateNo = 630 || stateNo = 640{
 call JumpCancel();
 }

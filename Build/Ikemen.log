@@ -1,8 +1,9 @@
-.\external\script\storyboard.lua:117: <game end>
+external/script/main.lua:1499: chars/SOL/SOL.def:
+chars\SOL/command.zss
+command.zss:72:
+Undefined function: jumpcancel
 stack traceback:
-	[G]: in function 'refresh'
-	.\external\script\storyboard.lua:117: in function 'f_play'
-	.\external\script\storyboard.lua:449: in function 'f_storyboard'
-	external/script/main.lua:3082: in function 'loop'
-	external/script/main.lua:4156: in main chunk
+	[G]: in function 'game'
+	external/script/main.lua:1499: in function 'f_commandLine'
+	external/script/main.lua:4135: in main chunk
 	[G]: ?

@@ -1,11 +1,3 @@
-#ZSS language: https://github.com/Windblade-GR01/Ikemen-GO/wiki/ZSS
-#ZSS syntax highlighter for Notepad++: https://github.com/K4thos/npp_zss
-#-------------------------------------------------------------------------------
-#Commenting in ZSS
-#You may notice that the ";" character is now replaced with the "#" character.
-#This is because ";" is now used to separate parameters in sctrls rather than a
-#blank space.
-
 #===============================================================================
 # Functions
 #===============================================================================
@@ -763,6 +755,8 @@ anim: 430; sprpriority: 2;]
 if time = 0{
 call AttackLevel2();
 call Init2B();
+mapSet{map: "groundPushbackX"; value: 0;}
+mapSet{map: "groundPushbackY"; value: -4;}
 }
 
 if time = 1 {
