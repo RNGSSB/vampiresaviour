@@ -48,20 +48,20 @@ velset: -2.8, -7; poweradd: 40;]
 velAdd{y: .4}
 
 #triggerall
-if vel y > 0 && alive && canRecover && (command = "recovery" || random%5=0 && aiLevelF) {
-	#trigger1 
-	if pos y >= -20 {
-		# Recover near ground (use changeState)
-		changeState{value: 5200} #HITFALL_RECOVER
-	} else {
-		#Else is used when the if{} block has a either true or false statement
-		#it is not required to handle the opposite of an if but this is used to
-		#to specify that only one thing should happen as the opposite(false)
-
-		#Recover in mid air (use selfState)
-		selfState{value: 5210} # ;HITFALL_AIRRECOVER
-	}
-}
+#if vel y > 0 && alive && canRecover && (command = "recovery" || random%5=0 && aiLevelF) {
+#	#trigger1 
+#	if pos y >= -20 {
+#		# Recover near ground (use changeState)
+#		changeState{value: 5200} #HITFALL_RECOVER
+#	} else {
+#		#Else is used when the if{} block has a either true or false statement
+#		#it is not required to handle the opposite of an if but this is used to
+#		#to specify that only one thing should happen as the opposite(false)
+#
+#		#Recover in mid air (use selfState)
+#		selfState{value: 5210} # ;HITFALL_AIRRECOVER
+#	}
+#}
 
 if pos y >= 0 && vel y > 0 {
 	selfState{value: 5100} #Hit ground
@@ -99,20 +99,20 @@ velset: -2.8, -7; poweradd: 40;]
 velAdd{y: .4}
 
 #triggerall
-if vel y > 0 && alive && canRecover && (command = "recovery" || random%5=0 && aiLevelF) {
-	#trigger1 
-	if pos y >= -20 {
-		# Recover near ground (use changeState)
-		changeState{value: 5200} #HITFALL_RECOVER
-	} else {
-		#Else is used when the if{} block has a either true or false statement
-		#it is not required to handle the opposite of an if but this is used to
-		#to specify that only one thing should happen as the opposite(false)
-
-		#Recover in mid air (use selfState)
-		selfState{value: 5210} # ;HITFALL_AIRRECOVER
-	}
-}
+#if vel y > 0 && alive && canRecover && (command = "recovery" || random%5=0 && aiLevelF) {
+#	#trigger1 
+#	if pos y >= -20 {
+#		# Recover near ground (use changeState)
+#		changeState{value: 5200} #HITFALL_RECOVER
+#	} else {
+#		#Else is used when the if{} block has a either true or false statement
+#		#it is not required to handle the opposite of an if but this is used to
+#		#to specify that only one thing should happen as the opposite(false)
+#
+#		#Recover in mid air (use selfState)
+#		selfState{value: 5210} # ;HITFALL_AIRRECOVER
+#	}
+#}
 
 if pos y >= 0 && vel y > 0 {
 	selfState{value: 5100} #Hit ground

@@ -41,6 +41,15 @@ if stateType = A && ctrl{
 if (Map(FF) || Map(c) && command != "holdback") && stateType != A && ctrl && stateNo != 100 {
 	changeState{value: 100}
 }
+
+#-------------------------------------------------------------------------------
+#EX Dash
+IgnoreHitPause{
+if (Map(FF) || Map(c)) && stateType != A && (stateNo >= 200 && stateNo <= 450 && moveContact) && HitPauseTime != 0 && power >= 500 {
+	changeState{value: 101}
+}
+}
+
 #-------------------------------------------------------------------------------
 #Run Back
 if (Map(BB) || Map(c) && command = "holdback") && (stateType != A && ctrl || stateNo = 100) {

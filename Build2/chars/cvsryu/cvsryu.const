@@ -13,10 +13,11 @@ attack = 100
 defence = 100
 ;Percentage to increase defense everytime player is knocked down
 fall.defence_up = 50
+power = 5000
 ;Time which player lies down for, before getting up
 liedown.time = 60
 ;Number of points for juggling
-airjuggle = 15
+airjuggle = 999
 ;Default hit spark number for HitDefs
 sparkno = 2
 ;Default guard spark number

@@ -2,6 +2,9 @@
   "modes": {
     "training": {
       "playtime": 0
+    },
+    "versus": {
+      "playtime": 0
     }
   },
   "playtime": 0
