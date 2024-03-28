@@ -828,9 +828,11 @@ if time = 1 {
 if time = 0{
 	call AttackLevel2();
 	call Init2B();
-	mapSet{map: "groundPushbackX"; value: 0;}
-	mapSet{map: "groundPushbackY"; value: -6;}
-	mapSet{map: "airPushbackX"; value: 0;}
+	mapSet{map: "hitStunAmount"; value: 20}
+	mapSet{map: "blockStunAmount"; value: 13}
+	mapSet{map: "groundPushbackX"; value: -2;}
+	mapSet{map: "groundPushbackY"; value: -4;}
+	mapSet{map: "airPushbackX"; value: -2;}
 	mapSet{map: "airPushbackY"; value: -6;}
 }
 
@@ -1048,7 +1050,7 @@ if animElemTime(3) = 2 {
 [StateDef 610;
 type: A; movetype: A; physics: A;
  poweradd: 30; ctrl: 0;
-anim: 620; sprpriority: 2;]
+anim: 610; sprpriority: 2;]
 
 if time = 2 {
 	call CSnd(0, 1, 1);
@@ -1059,7 +1061,17 @@ call AttackLevel2();
 call InitjB();
 }
 
-if animElem = 3 {
+if animElem = 2{
+	mapSet{map: "airPushbackX"; value: -2;}
+	mapSet{map: "airPushbackY"; value: -4;}
+}
+
+if animElem = 3{
+	mapSet{map: "airPushbackX"; value: -2;}
+	mapSet{map: "airPushbackY"; value: -5;}
+}
+
+if animElem = 2 || animElem = 3 {
 	hitDef{
 		attr: A, NA;                 
 		damage: map(attackDamage);                
@@ -1149,20 +1161,38 @@ type: S; movetype: A; physics: S;
 anim: 900; sprpriority: 2;]
 
 if time = 0 {
-	hitDef{
-		attr: S, NT;          #Attributes: Standing, Normal Throw
-		hitflag: M-;          #Affect only ground people who are not being hit
-		priority: 1, Miss;    #Throw has low priority, must be miss or dodge type.
-		sparkno: -1;          #No spark
-		p1sprpriority: 1;     #Draw p1's sprite in front of p2
-							  #p2's sprite priority is set to 0 by default
-		p1facing: 1;
-		p2facing: 1;          #Force p2 to face KFM
-		p1stateno: 805;       #On success, KFM changes to state 810
-		p2stateno: 806;       #If hit, p2 changes to state 820 in KFM's ZSS
-		guard.dist: 0;        #This prevents p2 from going into a guard state if close
-		fall: 1;              #Force p2 into falling down
+	if p2stateno = 800{
+		hitDef{
+			attr: S, NT;          #Attributes: Standing, Normal Throw
+			hitflag: M-;          #Affect only ground people who are not being hit
+			priority: 1, Miss;    #Throw has low priority, must be miss or dodge type.
+			sparkno: -1;          #No spark
+			p1sprpriority: 1;     #Draw p1's sprite in front of p2
+								  #p2's sprite priority is set to 0 by default
+			p1facing: 1;
+			p2facing: 1;          #Force p2 to face KFM
+			p1stateno: 840;       #On success, KFM changes to state 810
+			p2stateno: 840;       #If hit, p2 changes to state 820 in KFM's ZSS
+			guard.dist: 0;        #This prevents p2 from going into a guard state if close
+			fall: 1;              #Force p2 into falling down
+		}
+	}else{
+		hitDef{
+			attr: S, NT;          #Attributes: Standing, Normal Throw
+			hitflag: M-;          #Affect only ground people who are not being hit
+			priority: 1, Miss;    #Throw has low priority, must be miss or dodge type.
+			sparkno: -1;          #No spark
+			p1sprpriority: 1;     #Draw p1's sprite in front of p2
+								  #p2's sprite priority is set to 0 by default
+			p1facing: 1;
+			p2facing: 1;          #Force p2 to face KFM
+			p1stateno: 805;       #On success, KFM changes to state 810
+			p2stateno: 806;       #If hit, p2 changes to state 820 in KFM's ZSS
+			guard.dist: 0;        #This prevents p2 from going into a guard state if close
+			fall: 1;              #Force p2 into falling down
+		}
 	}
+	
 }
 
 call EndState(0);
@@ -1311,6 +1341,198 @@ if animElem = 8 {
 
 call EndState(0);
 
+#===============================================================================
+# Tatsumaki Senpukyaku
+#===============================================================================
+[StateDef 1200;
+type: A; movetype: A; physics: N;
+ poweradd: 11; ctrl: 0;
+anim: 1200; sprpriority: 2; velset: 0,0;]
+
+if time = 0{
+	call AttackLevel2();
+	mapSet{map: "groundPushbackY"; value: -3;}
+	mapSet{map: "airPushbackY"; value: -3;}
+	mapSet{map: "hardKnockDown"; value: 1;}
+}
+
+if animElem = 8 || animElem = 11 {
+	hitDef{
+		attr: A, NA;                 
+		damage: map(attackDamage);                
+		animtype: Light;             
+		guardflag: HA;        
+		hitflag: MAF;             
+		priority: map(hitPriority), Hit;                     
+		pausetime: map(hitStop), map(hitStop);             
+		sparkno: map(hitSparkNum);                   
+		sparkxy: map(sparkPosX), map(sparkPosY);                                           
+		hitsound: map(attackSoundGroup), map(attackSoundIndex);               
+		guardsound: map(guardSoundGroup), map(guardSoundIndex);             
+		ground.type: High;                   
+		ground.hittime: map(hitStunAmount);  
+		air.hittime: map(untechTime); 
+		guard.hittime: map(blockStunAmount);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY); 
+		ground.slidetime: map(hitSlideTime);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY);
+		air.velocity: map(airPushbackX), map(airPushbackY);
+		guard.velocity: map(groundGuardPushbackX);
+		guard.slidetime: map(guardSlideTime);
+		airguard.velocity: map(airGuardPushbackX), map(airGuardPushbackY); 
+		air.type: High;  
+		fall: map(hardKnockDown);
+		fall.recover: map(hardKnockDownRecover);
+		kill: map(AttackKill);
+		guard.kill: map(GuardKill); yaccel: map(comboGravity);
+	}
+}
+
+if animElem = 2{
+	velSet{x: 4;}
+}
+
+
+if animTime = 0{
+	changeState{value: 1205;}
+}
+
+#===============================================================================
+# Tatsumaki Senpukyaku Medium
+#===============================================================================
+[StateDef 1210;
+type: A; movetype: A; physics: N;
+ poweradd: 11; ctrl: 0;
+anim: 1210; sprpriority: 2; velset: 0,0;]
+
+if time = 0{
+	call AttackLevel2();
+	mapSet{map: "groundPushbackY"; value: -2;}
+	mapSet{map: "airPushbackY"; value: -2;}
+	mapSet{map: "directionMultiplierX"; value: 1.2}
+	mapSet{map: "directionMultiplierY"; value: 1}
+}
+
+if animElem = 20 || animElem = 23{
+mapSet{map: "hardKnockDown"; value: 1;}
+}
+
+if animElem = 8 || animElem = 11 || animElem = 14 || animElem = 11 || animElem = 17 || animElem = 20 || animElem = 23 {
+	hitDef{
+		attr: A, NA;                 
+		damage: map(attackDamage);                
+		animtype: Light;             
+		guardflag: HA;        
+		hitflag: MAF;             
+		priority: map(hitPriority), Hit;                     
+		pausetime: map(hitStop), map(hitStop);             
+		sparkno: map(hitSparkNum);                   
+		sparkxy: map(sparkPosX), map(sparkPosY);                                           
+		hitsound: map(attackSoundGroup), map(attackSoundIndex);               
+		guardsound: map(guardSoundGroup), map(guardSoundIndex);             
+		ground.type: High;                   
+		ground.hittime: map(hitStunAmount);  
+		air.hittime: map(untechTime); 
+		guard.hittime: map(blockStunAmount);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY); 
+		ground.slidetime: map(hitSlideTime);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY);
+		air.velocity: map(airPushbackX), map(airPushbackY);
+		guard.velocity: map(groundGuardPushbackX);
+		guard.slidetime: map(guardSlideTime);
+		airguard.velocity: map(airGuardPushbackX), map(airGuardPushbackY); 
+		air.type: High;  
+		fall: map(hardKnockDown);
+		fall.recover: map(hardKnockDownRecover);
+		kill: map(AttackKill);
+		guard.kill: map(GuardKill); yaccel: map(comboGravity);
+	}
+}
+
+
+
+if animElem = 2{
+	velSet{x: 4;}
+}
+
+
+if animTime = 0{
+	changeState{value: 1205;}
+}
+
+#===============================================================================
+# Tatsumaki Senpukyaku Heavy
+#===============================================================================
+[StateDef 1220;
+type: A; movetype: A; physics: N;
+ poweradd: 11; ctrl: 0;
+anim: 1220; sprpriority: 2; velset: 0,0;]
+
+if time = 0{
+	call AttackLevel2();
+	mapSet{map: "groundPushbackY"; value: -2;}
+	mapSet{map: "airPushbackY"; value: -2;}
+	mapSet{map: "directionMultiplierX"; value: 1.2}
+	mapSet{map: "directionMultiplierY"; value: 1}
+}
+
+if animElem = 26 || animElem = 29{
+mapSet{map: "hardKnockDown"; value: 1;}
+}
+
+if animElem = 8 || animElem = 11 || animElem = 14 || animElem = 11 || animElem = 17 || animElem = 20 || animElem = 23 || animElem = 26 || animElem = 29 {
+	hitDef{
+		attr: A, NA;                 
+		damage: map(attackDamage);                
+		animtype: Light;             
+		guardflag: HA;        
+		hitflag: MAF;             
+		priority: map(hitPriority), Hit;                     
+		pausetime: map(hitStop), map(hitStop);             
+		sparkno: map(hitSparkNum);                   
+		sparkxy: map(sparkPosX), map(sparkPosY);                                           
+		hitsound: map(attackSoundGroup), map(attackSoundIndex);               
+		guardsound: map(guardSoundGroup), map(guardSoundIndex);             
+		ground.type: High;                   
+		ground.hittime: map(hitStunAmount);  
+		air.hittime: map(untechTime); 
+		guard.hittime: map(blockStunAmount);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY); 
+		ground.slidetime: map(hitSlideTime);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY);
+		air.velocity: map(airPushbackX), map(airPushbackY);
+		guard.velocity: map(groundGuardPushbackX);
+		guard.slidetime: map(guardSlideTime);
+		airguard.velocity: map(airGuardPushbackX), map(airGuardPushbackY); 
+		air.type: High;  
+		fall: map(hardKnockDown);
+		fall.recover: map(hardKnockDownRecover);
+		kill: map(AttackKill);
+		guard.kill: map(GuardKill); yaccel: map(comboGravity);
+	}
+}
+
+if animElem = 2{
+	velSet{x: 4;}
+}
+
+
+if animTime = 0{
+	changeState{value: 1205;}
+}
+
+#===============================================================================
+# Tatsumaki Senpukyaku End
+#===============================================================================
+[StateDef 1205;
+type: A; movetype: A; physics: N;
+ poweradd: 11; ctrl: 0;
+anim: 1205; sprpriority: 2; velset: 0,0;]
+
+
+if animTime = 0{
+	changeState{value: 0; ctrl: 1}
+}
 
 #===============================================================================
 # Override common states (use same number to override):

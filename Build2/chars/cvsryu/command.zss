@@ -107,6 +107,39 @@ if Map(a) && (command = "holdfwd" || command = "holdback") &&
 	changeState{value: 800}
 }
 
+#-------------------------------------------------------------------------------
+#Tatsumaki Senpukyaku Light
+IgnoreHitPause{
+if Map(x) && Map(QCB) 
+&& (stateType != A && ctrl || stateNo = 100 || stateNo >= 200 && stateNo <= 450 && moveContact)  
+{
+	changeState{value: 1200}
+}
+}
+
+
+#-------------------------------------------------------------------------------
+#Tatsumaki Senpukyaku Medium
+IgnoreHitPause{
+if Map(y) && Map(QCB) 
+&& (stateType != A && ctrl || stateNo = 100 || stateNo >= 200 && stateNo <= 450 && moveContact)  
+{
+	changeState{value: 1210}
+}
+}
+
+
+#-------------------------------------------------------------------------------
+#Tatsumaki Senpukyaku Heavy
+IgnoreHitPause{
+if Map(z) && Map(QCB) 
+&& (stateType != A && ctrl || stateNo = 100 || stateNo >= 200 && stateNo <= 450 && moveContact)  
+{
+	changeState{value: 1220}
+}
+}
+
+
 #5L
 if Map(x) && command != "holddown" &&
 	(stateType = S && (ctrl || stateNo = 100)) {

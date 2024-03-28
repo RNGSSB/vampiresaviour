@@ -1,8 +1,19 @@
-.\external\script\storyboard.lua:117: <game end>
+external/script/main.lua:3716: .\external\mods\turtlewax.lua:385: attempt to index a non-table object(nil) with key '1'
 stack traceback:
-	[G]: in function 'refresh'
-	.\external\script\storyboard.lua:117: in function 'f_play'
-	.\external\script\storyboard.lua:449: in function 'f_storyboard'
-	external/script/main.lua:3082: in function 'loop'
+	.\external\mods\turtlewax.lua:385: in function 'setDefaults'
+	.\external\mods\turtlewax.lua:550: in function 'poll'
+	.\external\mods\turtlewax.lua:512: in function 'k'
+	external/script/main.lua:433: in function 'run'
+	.\external\script\global.lua:182: in function 'loop'
+	<string>:1: in function <<string>:0>
+	[G]: in function 'game'
+	external/script/main.lua:3716: in function 'f'
+	external/script/main.lua:3105: in function 'loop'
+	external/script/main.lua:4156: in main chunk
+	[G]: ?
+stack traceback:
+	[G]: in function 'game'
+	external/script/main.lua:3716: in function 'f'
+	external/script/main.lua:3105: in function 'loop'
 	external/script/main.lua:4156: in main chunk
 	[G]: ?
