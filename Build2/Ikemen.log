@@ -1,19 +1,14 @@
-external/script/main.lua:3716: .\external\mods\turtlewax.lua:385: attempt to index a non-table object(nil) with key '1'
-stack traceback:
-	.\external\mods\turtlewax.lua:385: in function 'setDefaults'
-	.\external\mods\turtlewax.lua:550: in function 'poll'
-	.\external\mods\turtlewax.lua:512: in function 'k'
-	external/script/main.lua:433: in function 'run'
-	.\external\script\global.lua:182: in function 'loop'
-	<string>:1: in function <<string>:0>
-	[G]: in function 'game'
-	external/script/main.lua:3716: in function 'f'
-	external/script/main.lua:3105: in function 'loop'
-	external/script/main.lua:4156: in main chunk
-	[G]: ?
+.\external\script\start.lua:1403: chars/cvsryu/cvsryu.def:
+chars\cvsryu/command.zss
+command.zss:244:
+Unexpected token: }
 stack traceback:
 	[G]: in function 'game'
-	external/script/main.lua:3716: in function 'f'
-	external/script/main.lua:3105: in function 'loop'
+	.\external\script\start.lua:1403: in function 'f_game'
+	.\external\script\start.lua:1839: in function 'launchFight'
+	external/script/default.lua:2: in function <external/script/default.lua:0>
+	.\external\script\start.lua:1457: in function 'f'
+	external/script/main.lua:3069: in function 'loop'
+	external/script/main.lua:3189: in function 'loop'
 	external/script/main.lua:4156: in main chunk
 	[G]: ?

@@ -15,7 +15,7 @@ defence = 100
 fall.defence_up = 50
 power = 5000
 ;Time which player lies down for, before getting up
-liedown.time = 60
+liedown.time = 30
 ;Number of points for juggling
 airjuggle = 999
 ;Default hit spark number for HitDefs

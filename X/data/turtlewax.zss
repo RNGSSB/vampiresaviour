@@ -1,0 +1,1130 @@
+#==|DO NOT TOUCH ANY OF THE FUNCTION LOGIC|======
+[Function replayReleaseCheck(s,x,y,z,w,a,b,c,d,rs,rx,ry,rz,rw,ra,rb,rc,rd,up,down,left,right,ru,rdn,rl,rr)]
+
+
+ if(Map(r_dir)> 0.5)
+{
+#Negative Edge
+Map(r_dir):= floor(Map(r_dir)*0.0625);
+}
+
+if((Map(r_dir)&$up) = 0 && (Map(h_dir)&$ru) > 0)
+{
+#up init 
+Map(r_dir):= (Map(r_dir)|$ru);
+}
+ if((Map(r_dir)&$down) = 0 && (Map(h_dir)&$rdn) > 0)
+{
+#down init 
+Map(r_dir):= (Map(r_dir)|$rdn);
+}
+
+ if((Map(r_dir)&$left) = 0 && (Map(h_dir)&$rl) > 0)
+{
+#back init 
+Map(r_dir):= (Map(r_dir)|$rl);
+}
+
+ if((Map(r_dir)&$right) = 0 && (Map(h_dir)&$rr) > 0)
+{
+
+#fwd init 
+Map(r_dir):= (Map(r_dir)|$rr);
+}
+
+#BUTTON RELEASE:
+
+ if((Map(h_att)&$s) = 0 && (Map(h_att)&$rs) > 0 )
+{
+#start init 
+Map(r_att):= (Map(r_att)|$rs);
+}
+
+ if((Map(h_att)&$d) = 0 && (Map(h_att)&$rd) > 0)
+{
+#d init 
+Map(r_att):= (Map(r_att)|$rd);
+}
+
+if((Map(h_att)&$w) = 0 && (Map(h_att)&$rw) > 0)
+{
+#w init 
+Map(r_att):= (Map(r_att)|$rw);
+}
+
+
+ if((Map(h_att)&$c) = 0 && (Map(h_att)&$rc) > 0)
+{
+#hk init 
+Map(r_att):= (Map(r_att)|$rc);
+}
+
+ if((Map(h_att)&$z) = 0 && (Map(h_att)&$rz) > 0)
+{
+#hp init 
+Map(r_att):= (Map(r_att)|$rz);
+}
+
+ if((Map(h_att)&$b) = 0 && (Map(h_att)&$rb) > 0)
+{
+#mk init 
+Map(r_att):= (Map(r_att)|$rb);
+}
+
+ if((Map(h_att)&$y) = 0 && (Map(h_att)&$ry) > 0)
+{
+#mp init 
+Map(r_att):= (Map(r_att)|$ry);
+}
+
+ if((Map(h_att)&$a) = 0 && (Map(h_att)&$ra) > 0)
+{
+#lk init 
+Map(r_att):= (Map(r_att)|$ra);
+}
+
+  if((Map(h_att)&$x) = 0 && (Map(h_att)&$rx) > 0)
+{
+#lp init 
+Map(r_att):= (Map(r_att)|$rx);
+}
+
+[Function checkBtn(r,s,x,y,z,w,a,b,c,d,rs,rx,ry,rz,rw,ra,rb,rc,rd)]
+if $r
+{
+let r = playerid(getplayerid($r)),helper(const(ih)),id;
+
+}
+else
+{
+let r = id;
+}
+
+let rot = playerid($r),root,id;
+
+#Press Dec all buttons
+playerid($r),Map(p_att):= floor(playerid($r),Map(p_att)/Const(Bit10));
+playerid($r),Map(h_att):= floor(playerid($r),Map(h_att)/Const(Bit10));
+playerid($r),Map(r_att):= floor(playerid($r),Map(r_att)/Const(Bit10));
+playerid($r),Map(m_att):= floor(playerid($r),Map(m_att)/Const(Bit10));
+
+#BUTTON HOLD:
+if(command = "start" || command = "hold_start")
+{
+#start init 
+playerid($r),Map(h_att):= (playerid($r),Map(h_att)|$s);
+}
+
+
+if(command = "d"|| command = "hold_d")
+{
+#d init 
+playerid($r),Map(h_att):= (playerid($r),Map(h_att)|$d );
+}
+ if(command = "w"|| command = "hold_w")
+{
+#w init 
+playerid($r),Map(h_att):= (playerid($r),Map(h_att)|$w );
+}
+ if(command = "c"|| command = "hold_c")
+{
+#hk init 
+playerid($r),Map(h_att):= (playerid($r),Map(h_att)|$c);
+}
+
+ if(command = "z"|| command = "hold_z")
+{
+#hp init 
+playerid($r),Map(h_att):= (playerid($r),Map(h_att)|$z);
+}
+
+ if(command = "b"||command = "hold_b")
+{
+#mk init 
+playerid($r),Map(h_att):= (playerid($r),Map(h_att)|$b);
+}
+
+ if(command = "y"|| command = "hold_y")
+{
+#mp init 
+
+playerid($r),Map(h_att):= (playerid($r),Map(h_att)|$y);
+}
+
+ if(command = "a"|| command = "hold_a")
+{
+#lk init 
+playerid($r),Map(h_att):= (playerid($r),Map(h_att)|$a);
+}
+
+ if(command = "x"|| command = "hold_x")
+{
+#lp init 
+playerid($r),Map(h_att):= (playerid($r),Map(h_att)|$x);
+}
+
+#BUTTON PRESS:
+
+ if(command = "start" )
+{
+#start init 
+playerid($r),Map(p_att):= (playerid($r),Map(p_att)|$s);
+playerid($r),Map(m_att):= (playerid($r),Map(m_att)|$s);
+}
+
+
+ if(command = "d")
+{
+#d init 
+playerid($r),Map(p_att):= (playerid($r),Map(p_att)|$d);
+playerid($r),Map(m_att):= (playerid($r),Map(m_att)|$d);
+}
+ if(command = "w")
+{
+#w init 
+playerid($r),Map(p_att):= (playerid($r),Map(p_att)|$w);
+playerid($r),Map(m_att):= (playerid($r),Map(m_att)|$w);
+}
+if(command = "c")
+{
+#hk init 
+playerid($r),Map(p_att):= (playerid($r),Map(p_att)|$c);
+playerid($r),Map(m_att):= (playerid($r),Map(m_att)|$c);
+}
+if(command = "z")
+{
+#hp init 
+playerid($r),Map(p_att):= (playerid($r),Map(p_att)|$z);
+playerid($r),Map(m_att):= (playerid($r),Map(m_att)|$z);
+}
+
+if(command = "b")
+{
+#mk init 
+playerid($r),Map(p_att):= (playerid($r),Map(p_att)|$b);
+playerid($r),Map(m_att):= (playerid($r),Map(m_att)|$b);
+}
+
+if(command = "y")
+{
+#mp init 
+playerid($r),Map(p_att):= (playerid($r),Map(p_att)|$y);
+playerid($r),Map(m_att):= (playerid($r),Map(m_att)|$y);
+}
+
+if(command = "a")
+{
+#lk init 
+playerid($r),Map(p_att):= (playerid($r),Map(p_att)|$a);
+playerid($r),Map(m_att):= (playerid($r),Map(m_att)|$a);
+}
+
+if(command = "x" )
+{
+#lp init 
+playerid($r),Map(p_att):= (playerid($r),Map(p_att)|$x);
+playerid($r),Map(m_att):= (playerid($r),Map(m_att)|$x);
+}
+
+#BUTTON RELEASE:
+
+ if((playerid($r),Map(h_att)&$s) = 0 && (playerid($r),Map(h_att)&$rs) > 0 )
+{
+#start init 
+playerid($r),Map(r_att):= (playerid($r),Map(r_att)|$rs);
+}
+
+ if((playerid($r),Map(h_att)&$d) = 0 && (playerid($r),Map(h_att)&$rd) > 0)
+{
+#d init 
+playerid($r),Map(r_att):= (playerid($r),Map(r_att)|$rd);
+}
+
+if((playerid($r),Map(h_att)&$w) = 0 && (playerid($r),Map(h_att)&$rw) > 0)
+{
+#w init 
+playerid($r),Map(r_att):= (playerid($r),Map(r_att)|$rw);
+}
+
+
+ if((playerid($r),Map(h_att)&$c) = 0 && (playerid($r),Map(h_att)&$rc) > 0)
+{
+#hk init 
+playerid($r),Map(r_att):= (playerid($r),Map(r_att)|$rc);
+}
+
+ if((playerid($r),Map(h_att)&$z) = 0 && (playerid($r),Map(h_att)&$rz) > 0)
+{
+#hp init 
+playerid($r),Map(r_att):= (playerid($r),Map(r_att)|$rz);
+}
+
+ if((playerid($r),Map(h_att)&$b) = 0 && (playerid($r),Map(h_att)&$rb) > 0)
+{
+#mk init 
+playerid($r),Map(r_att):= (playerid($r),Map(r_att)|$rb);
+}
+
+ if((playerid($r),Map(h_att)&$y) = 0 && (playerid($r),Map(h_att)&$ry) > 0)
+{
+#mp init 
+playerid($r),Map(r_att):= (playerid($r),Map(r_att)|$ry);
+}
+
+ if((playerid($r),Map(h_att)&$a) = 0 && (playerid($r),Map(h_att)&$ra) > 0)
+{
+#lk init 
+playerid($r),Map(r_att):= (playerid($r),Map(r_att)|$ra);
+}
+
+  if((playerid($r),Map(h_att)&$x) = 0 && (playerid($r),Map(h_att)&$rx) > 0)
+{
+#lp init 
+playerid($r),Map(r_att):= (playerid($r),Map(r_att)|$rx);
+}
+#---------------------------------[DIRECTIONS]---------------------------------#
+#DIRECTIONAL:
+#Map(p_dir) = PRESS
+#Map(h_dir) = HOLD
+#Map(r_dir) = RELEASE
+#Final tick (pattern repeats going up, can store 8 ticks):
+# Up      = 0x01
+# Down    = 0x02
+# Back    = 0x04
+# Forward = 0x08
+
+[Function checkdir(r,up,down,left,right,ru,rd,rl,rr)]
+if $r
+{
+let rv = 1;
+let r = playerid(getplayerid($r)),helper(const(ih)),id;
+
+}
+else
+{
+let r = id;
+}
+
+let tc = root,Map(tw_turncheck);
+
+let rf = root,facing;
+
+
+
+
+
+
+
+let fcond1=  ( p2dist x >=0&&!$tc ||$tc &&facing=root,facing);
+let fcond2=(p2dist x <0&&!$tc ||  $tc &&facing!=root,facing ); 
+if $rv
+{
+let fcond1=  !$fcond1;
+let fcond2=!$fcond2; 
+}
+
+ if(playerid($r),Map(h_dir)> 0.5)
+{#Hold Dec
+playerid($r),Map(h_dir):= floor(playerid($r),Map(h_dir)*0.0625);
+
+
+}
+
+  if(playerid($r),Map(p_dir)> 0.5)
+{
+#Press Dec
+playerid($r),Map(p_dir):=floor(playerid($r),Map(p_dir)*0.0625);
+}
+
+ if(playerid($r),Map(r_dir)> 0.5)
+{
+#Negative Edge
+playerid($r),Map(r_dir):= floor(playerid($r),Map(r_dir)*0.0625);
+}
+
+#Zero out because maps are floats
+ if(playerid($r),Map(h_dir)< 1)
+{#Hold Dec
+playerid($r),Map(h_dir):= 0;
+}
+  if(playerid($r),Map(p_dir)< 1)
+{
+#Press Dec
+playerid($r),Map(p_dir):= 0;
+}
+  if(playerid($r),Map(r_dir)< 1)
+{
+#Negative Edge
+playerid($r),Map(r_dir):= 0;
+}
+
+#DIRECTION PRESS:
+if(command = "up2" || command = "holdup")
+{
+ if command = "up2"
+{
+#up
+playerid($r),Map(p_dir):= (playerid($r),Map(p_dir)|$up);
+}
+#up init 
+playerid($r),Map(h_dir):= (playerid($r),Map(h_dir)|$up);
+
+}
+
+ if(command = "down2" || command = "holddown")
+{
+ if command = "down2"
+{
+#down
+playerid($r),Map(p_dir):= (playerid($r),Map(p_dir)|$down);
+
+}
+#down init 
+playerid($r),Map(h_dir):= (playerid($r),Map(h_dir)|$down);
+
+}
+
+
+ if ((command="back2" || command="holdback" ) && $fcond1) ||((command="fwd2" || command="holdfwd" ) && $fcond2) 
+{
+if ((command="back2" ) && $fcond1) ||((command="fwd2" ) && $fcond2) {
+#back 
+
+
+playerid($r),Map(p_dir):= (playerid($r),Map(p_dir)|$left);
+}
+playerid($r),Map(h_dir):= (playerid($r),Map(h_dir)|$left);
+}
+
+
+
+ if ((command="back2" || command="holdback" ) && $fcond2) ||((command="fwd2" || command="holdfwd" ) && $fcond1) 
+{
+if ((command="back2" ) && $fcond2) ||((command="fwd2" ) && $fcond1) {
+#back 
+playerid($r),Map(p_dir):= (playerid($r),Map(p_dir)|$right);
+}
+playerid($r),Map(h_dir):= (playerid($r),Map(h_dir)|$right);
+}
+
+
+
+#DIRECTION RELEASE:
+
+if((playerid($r),Map(r_dir)&$up) = 0 && (playerid($r),Map(h_dir)&$ru) > 0)
+{
+#up init 
+playerid($r),Map(r_dir):= (playerid($r),Map(r_dir)|$ru);
+}
+ if((playerid($r),Map(h_dir)&$down) = 0 && (playerid($r),Map(h_dir)&$rd) > 0)
+{
+#down init 
+playerid($r),Map(r_dir):= (playerid($r),Map(r_dir)|$rd);
+}
+
+ if((playerid($r),Map(h_dir)&$left) = 0 && (playerid($r),Map(h_dir)&$rl) > 0)
+{
+#back init 
+playerid($r),Map(r_dir):= (playerid($r),Map(r_dir)|$rl);
+}
+
+ if((playerid($r),Map(h_dir)&$right) = 0 && (playerid($r),Map(h_dir)&$rr) > 0)
+{
+
+#fwd init 
+playerid($r),Map(r_dir):= (playerid($r),Map(r_dir)|$rr);
+}
+
+
+
+
+#---block fix
+if (playerid($r),Map(p_att)>=const(bit10)|| playerid($r),Map(r_att)>0&&root,movetype=A)
+{
+AssertSpecial{flag:nostandguard;flag2:nocrouchguard;flag3:noairguard;redirectid:root,id}
+} 
+
+
+
+#-----------------------------------
+[Function setdir(up,down,left,right,ru,rd,rl,rr) ]
+
+
+#printtoconsole{text:"%d %d %d %d";params:root,id,playerid($rot),id, Map(p_dir),teamside}
+root,Map(p_Up):=(Map(p_dir)&$up);
+root,Map(p_Dn):=(Map(p_dir)&$down);
+root,Map(p_Bk):=(Map(p_dir)&$left);
+root,Map(p_Fd):=(Map(p_dir)&$right);
+
+root,Map(h_Up):=(Map(h_dir)&($up|$ru));
+root,Map(h_Dn):=(Map(h_dir)&($down|$rd)) ;
+root,Map(h_Bk):=(Map(h_dir)&($left|$rl));
+root,Map(h_Fd):=(Map(h_dir)&($right|$rr));
+
+root,Map(r_Up):=(Map(r_dir)&$ru);
+root,Map(r_Dn):=(Map(r_dir)&$rd);
+root,Map(r_Bk):=(Map(r_dir)&$rl);
+root,Map(r_Fd):=(Map(r_dir)&$rr);
+
+root,Map(u_Up):=(Map(p_dir)&$up);
+root,Map(u_Dn):=(Map(p_dir)&$down);
+root,Map(u_Bk):=(Map(p_dir)&$left);
+root,Map(u_Fd):=(Map(p_dir)&$right);
+
+[Function setbtn(s,x,y,z,w,a,b,c,d,rs,rx,ry,rz,rw,ra,rb,rc,rd)]
+
+
+
+#regular inputs
+root,Map(x):=(Map(p_att) &($x|$rx));
+root,Map(y):=(Map(p_att) &($y|$ry));
+root,Map(z):=(Map(p_att) &($z|$rz));
+root,Map(s):=(Map(p_att) &($s|$rs));
+root,Map(w):=(Map(p_att)&($w|$rw));
+root,Map(a):=(Map(p_att) &($a|$ra));
+root,Map(b):=(Map(p_att) &($b|$rb));
+root,Map(c):=(Map(p_att) &($c|$rc));
+root,Map(d):=(Map(p_att)&($d|$rd));
+
+root,Map(h_x):=(Map(h_att) &($x|$rx));
+root,Map(h_y):=(Map(h_att) &($y|$ry));
+root,Map(h_z):=(Map(h_att) &($z|$rz));
+root,Map(h_w):=(Map(h_att)&($w|$rw));
+root,Map(h_s):=(Map(h_att) &($s|$rs));
+root,Map(h_a):=(Map(h_att) &($a|$ra));
+root,Map(h_b):=(Map(h_att) &($b|$rb));
+root,Map(h_c):=(Map(h_att) &($c|$rc));
+root,Map(h_d):=(Map(h_att)&($d|$rd));
+
+root,Map(r_x):=(Map(r_att) &$rx);
+root,Map(r_y):=(Map(r_att) &$ry);
+root,Map(r_z):=(Map(r_att) &$rz);
+root,Map(r_w):=(Map(r_att)&$rw);
+root,Map(r_s):=(Map(r_att) &$rs);
+root,Map(r_a):=(Map(r_att) &$ra);
+root,Map(r_b):=(Map(r_att) &$rb);
+root,Map(r_c):=(Map(r_att) &$rc);
+root,Map(r_d):=(Map(r_att)&$rd);
+
+root,Map(u_x):=(Map(p_att) &$x);
+root,Map(u_y):=(Map(p_att) &$y);
+root,Map(u_z):=(Map(p_att) &$z);
+root,Map(u_w):=(Map(p_att)&$w);
+root,Map(u_s):=(Map(p_att) &$s);
+root,Map(u_a):=(Map(p_att) &$a);
+root,Map(u_b):=(Map(p_att) &$b);
+root,Map(u_c):=(Map(p_att) &$c);
+root,Map(u_d):=(Map(p_att)&$d);
+
+root,Map(m_x):=(Map(m_att) &($x|$rx));
+root,Map(m_y):=(Map(m_att) &($y|$ry));
+root,Map(m_z):=(Map(m_att) &($z|$rz));
+root,Map(m_s):=(Map(m_att) &($s|$rs));
+root,Map(m_w):=(Map(m_att)&($w|$rw));
+root,Map(m_a):=(Map(m_att) &($a|$ra));
+root,Map(m_b):=(Map(m_att) &($b|$rb));
+root,Map(m_c):=(Map(m_att) &($c|$rc));
+root,Map(m_d):=(Map(m_att)&($d|$rd));
+
+
+
+
+
+
+
+[Function setDefault()]
+
+#THESE ARE DEFAULT VALUES, CHANGE THEM IN YOUR CHARACTER/FILES. DO NOT CHANGE THEM HERE.
+#YOU CAN SET THESE MAPS IN YOUR CHARACTER'S DEF FILE ||IN THEIR CODE. JUST DON'T DO IT
+#HERE!
+#How many buttons? either 1 f||yes ||-1 f||no
+if root,Map(tw_btn6)=0
+{
+root,Map(tw_btn6):=1;
+}
+
+
+#How much time in frames do we have to press the next button to complete a Hundred Hand Slap Motion, only set once here, you can set it anywhere else
+if root,Map(tw_MashPCt)=0
+{
+root,Map(tw_MashPCt):=10;
+}
+#How many times do we need to mash to complete the motion, only set once here, you can set it anywhere else
+if root,Map(tw_MashCt)=0
+{
+root,Map(tw_MashCt):=5;
+}
+
+#Charge partitioning?
+if root,Map(tw_charge_partition)=1{
+root,Map(tw_ChargePartitionTime):=8;
+}
+#How much time can we wait to cancel a move?
+if root,Map(tw_MoveCancelTime)=0
+{
+root,Map(tw_MoveCancelTime):=1;
+}
+
+if !root,Map(tw_D_ChargeTime)#Down charge ala Flash Kick 
+{
+root,Map(tw_D_ChargeTime):=48;
+}
+
+if !root,Map(tw_D_BufferTime)#How much time a complete charge is stored
+{
+root,Map(tw_D_BufferTime):=9;
+}
+
+if !root,Map(tw_B_ChargeTime)#Back charge ala Sonic Boom 
+{
+root,Map(tw_B_ChargeTime):=48;
+}
+
+if !root,Map(tw_B_BufferTime)#How much time a complete charge is stored
+{
+root,Map(tw_B_BufferTime):=9;
+}
+
+if !root,Map(tw_F_ChargeTime)#Back charge ala Sonic Boom 
+{
+root,Map(tw_F_ChargeTime):=48;
+}
+
+if !root,Map(tw_F_BufferTime)#How much time a complete charge is stored
+{
+root,Map(tw_F_BufferTime):=9;
+}
+
+if !root,Map(tw_Dash_input1_BufferTime)#first input time f||run
+{
+root,Map(tw_Dash_input1_BufferTime):=9;
+}
+
+if !root,Map(tw_Dash_input2_BufferTime)#first input time f||run
+{
+root,Map(tw_Dash_input2_BufferTime):=6;
+}
+
+
+
+
+#===|Hundred Hand Slap Definition|===
+[function checkHHS()]
+let btn6 =  root,Map(tw_btn6);
+let mashpct =  root,Map(tw_MashPCt);
+let mashct = root,Map(tw_MashCt);
+
+
+
+let hhs = root,Map(tw_MashPCt);
+
+if Map(mashtimer)>0#&&root,hitpausetime=0  
+{
+Map(mashtimer):=map(mashtimer)-1;
+}
+if Map(mashtimerk)>0#&&root,hitpausetime=0 
+{
+Map(mashtimerk):=map(mashtimerk)-1;
+}
+
+
+#HHSP - mash p continuously, either in a piano ||constant press of the same button ending on that button
+ if  ((root,Map(tw_bind1) <2||root,Map(tw_bind)=4) && map(m_att)&const(Bit4) =const(Bit4)||
+ ((Map(m_att)&3)=Const(Bit1)||(Map(m_att)&3)=Const(Bit2)||(Map(m_att)&3)=Const(Bit1)+Const(Bit2))||
+((Map(m_att)&7)=Const(Bit3)||(Map(m_att)&7)=Const(Bit1)+Const(Bit3)||(Map(m_att)&7)=Const(Bit3)+Const(Bit2)||(Map(m_att)&7)=Const(Bit3)+Const(Bit1)+Const(Bit2))&&$btn6=1)
+{
+#HHSP init
+Map(hhsp):=map(hhsp)+1;
+
+Map(mashtimer):=$mashpct;
+}
+
+ if  ((root,Map(tw_bind1) =2||root,Map(tw_bind1) =0||root,Map(tw_bind)=4) && map(m_att)&const(Bit8) =const(Bit8)||
+ ((Map(m_att)&48)=Const(Bit5)||(Map(m_att)&48)=Const(Bit6)||(Map(m_att)&48)=Const(Bit5)+Const(Bit6))||
+((Map(m_att)&112)=Const(Bit7)||(Map(m_att)&112)=Const(Bit5)+Const(Bit7)||(Map(m_att)&112)=Const(Bit7)+Const(Bit6)||(Map(m_att)&112)=Const(Bit5)+Const(Bit6)+Const(Bit7))&&root,Map(tw_btn6)=1)
+{
+#HHSK init
+Map(hhsk):=map(hhsk)+1;
+
+Map(mashtimerk):=$mashpct;
+}
+
+
+if Map(mashtimer)<=0
+{
+Map(hhsp):=0;
+}
+if Map(mashtimerk)<=0
+{
+Map(hhsk):=0;
+}
+
+
+root,Map(HHSP):= (Map(mashtimer) > 0  && Map(hhsp) > $mashct);
+root,Map(HHSk):= (Map(mashtimerk) > 0 && Map(hhsk) > $mashct);
+
+
+
+if  gamemode!="versuscoop" && teammode=tag {
+if (playerid(getplayerid(1)),id)=root,id {
+playerid(getplayerid(3)),Map(HHSP):= (Map(mashtimer) > 0  && Map(hhsp) > $mashct);
+playerid(getplayerid(5)),Map(HHSP):= (Map(mashtimer) > 0  && Map(hhsp) > $mashct);
+playerid(getplayerid(7)),Map(HHSP):= (Map(mashtimer) > 0  && Map(hhsp) > $mashct);
+playerid(getplayerid(3)),Map(HHSK):= (Map(mashtimerk) > 0  && Map(hhsk) > $mashct);
+playerid(getplayerid(5)),Map(HHSK):= (Map(mashtimerk) > 0  && Map(hhsk) > $mashct);
+playerid(getplayerid(7)),Map(HHSK):= (Map(mashtimerk) > 0  && Map(hhsk) > $mashct);
+
+}
+else{
+playerid(getplayerid(4)),Map(HHSP):= (Map(mashtimer) > 0  && Map(hhsp) > $mashct);
+playerid(getplayerid(6)),Map(HHSP):= (Map(mashtimer) > 0  && Map(hhsp) > $mashct);
+playerid(getplayerid(8)),Map(HHSP):= (Map(mashtimer) > 0  && Map(hhsp) > $mashct);
+playerid(getplayerid(4)),Map(HHSK):= (Map(mashtimerk) > 0  && Map(hhsk) > $mashct);
+playerid(getplayerid(6)),Map(HHSK):= (Map(mashtimerk) > 0  && Map(hhsk) > $mashct);
+playerid(getplayerid(8)),Map(HHSK):= (Map(mashtimerk) > 0  && Map(hhsk) > $mashct);
+}
+}
+
+
+#set charge values
+[function setcharge()]
+let cpt = root,Map(tw_charge_partition);
+
+	#check holding left
+	if (map(h_dir)&64) > 0 || (map(h_dir)&4)>0 {
+		map(ch_valb):=map(ch_valb)+1;
+		if $cpt {
+			map(chp_tb):=root,Map(tw_ChargePartitionTime);
+		}
+		if map(ch_valb) >= root,Map(tw_B_ChargeTime) {
+			root,Map(tw_B_ChargeReady):=root,Map(tw_B_BufferTime);
+		}
+	}
+	else {
+		if !root,hitpausetime {
+			if root,Map(tw_B_ChargeReady)>0 {
+				root,Map(tw_B_ChargeReady):=root,Map(tw_B_ChargeReady)-1;
+			}
+			if  map(chp_tb)>0 {
+				map(chp_tb):=map(chp_tb)-1;
+			}
+
+			if !$cpt || map(chp_tb)=0 {
+				map(ch_valb):=0;
+			}
+		}
+	}
+	
+		#check holding down
+	if (map(h_dir)&32) > 0 || (map(h_dir)&2)>0 {
+		map(ch_vald):=map(ch_vald)+1;
+		if $cpt {
+			map(chp_td):=root,Map(tw_ChargePartitionTime);
+		}
+		if map(ch_vald) >= root,Map(tw_D_ChargeTime) {
+			root,Map(tw_D_ChargeReady):=root,Map(tw_D_BufferTime);
+		}
+	}
+	else {
+		if !root,hitpausetime {
+			if root,Map(tw_D_ChargeReady)>0  {
+				root,Map(tw_D_ChargeReady):=root,Map(tw_D_ChargeReady)-1;
+			}
+			if  map(chp_td)>0 {
+				map(chp_td):=map(chp_td)-1;
+			}
+
+			if !$cpt || map(chp_td)=0 {
+				map(ch_vald):=0;
+			}
+		}
+	}
+	
+	#check holding fwd
+	if (map(h_dir)&128) > 0 || (map(h_dir)&8)>0 {
+		map(ch_valf):=map(ch_valf)+1;
+		if $cpt {
+			map(chp_tf):=root,Map(tw_ChargePartitionTime);
+		}
+		if map(ch_valf) >= root,Map(tw_F_ChargeTime) {
+			root,Map(tw_F_ChargeReady):=root,Map(tw_F_BufferTime);
+		}
+	}
+	else {
+		if !root,hitpausetime {
+			if root,Map(tw_F_ChargeReady)>0  {
+				root,Map(tw_F_ChargeReady):=root,Map(tw_F_ChargeReady)-1;
+			}
+			if  map(chp_tf)>0 {
+			map(chp_tf):=map(chp_tf)-1;
+			}
+
+			if !$cpt || map(chp_tf)=0 {
+				map(ch_valf):=0;
+			}
+		}
+	}
+	
+	#check holding up
+	if (map(h_dir)&16) > 0 || (map(h_dir)&1)>0 {
+		map(ch_valu):=map(ch_valu)+1;
+		if $cpt {
+			map(chp_tu):=root,Map(tw_ChargePartitionTime);
+		}
+		if map(ch_valu) >= root,Map(tw_U_ChargeTime) {
+			root,Map(tw_U_ChargeReady):=root,Map(tw_U_BufferTime);
+		}
+	}
+	else {
+		if !root,hitpausetime {
+			if root,Map(tw_U_ChargeReady)>0  {
+				root,Map(tw_U_ChargeReady):=root,Map(tw_U_ChargeReady)-1;
+			}
+			if  map(chp_tu)>0 {
+				map(chp_tu):=map(chp_tu)-1;
+			}
+
+			if !$cpt || map(chp_tu)=0 {
+				map(ch_valu):=0;
+			}
+		}
+	}
+
+
+
+[Statedef -4]
+
+#====|END OF THINGS YOU CAN COPY|====================
+#DO NOT TOUCH ANY BELOW UNLESS YOU KNOW EXACTLY WHAT YOU'RE DOING!
+if numhelper(const(ih))=0&&!ishelper&&teamside=[1,2]&&map(u_tw){
+#see common.cds
+
+Helper{
+		id: const(ih);
+		stateno: 9992999;
+		ownpal: 1;
+		name:"TurtleWax";
+		size.height: 0;
+		keyctrl:1;
+		pausemovetime:99999;
+		supermovetime:99999;
+		facing:cond(teamside=2,-1,1)
+	}
+}
+
+
+ignorehitpause if ishelper(const(ih)) {
+if time=1{
+call setDefault();
+}
+let up = Const(Bit5);
+let down = Const(Bit6);
+let left = Const(Bit7);
+let right = Const(Bit8);
+
+let release_Up = Const(Bit1);
+let release_Down = Const(Bit2);
+let release_Left = Const(Bit3);
+let release_Right = Const(Bit4);
+#tbh these aren't even used.
+let hold_up = $up+$release_Up;
+let hold_down = $down+$release_Down;
+let hold_left = $left+$release_Left;
+let hold_right = $right+$release_Right;
+
+
+#declare our buttons
+let x = Const(Bit10);
+let y = Const(Bit11);
+let z = Const(Bit12);
+let w = Const(Bit13);
+let s = Const(Bit14);
+let a = Const(Bit15);
+let b = Const(Bit16);
+let c = Const(Bit17);
+let d = Const(Bit18);
+let release_x = Const(Bit1);
+let release_y = Const(Bit2);
+let release_z = Const(Bit3);
+let release_w = Const(Bit4);
+let release_Start = Const(Bit5);
+let release_a = Const(Bit6);
+let release_b = Const(Bit7);
+let release_c = Const(Bit8);
+let release_d = Const(Bit9);
+
+let r_AllBits_dir  =  $release_Up+$release_Down+$release_Left+$release_Right;
+
+let r_AllBits_att =  $release_x+$release_y+$release_z+$release_a+$release_b+$release_c;
+let r_PBits =  $release_x+$release_y+$release_z;
+let r_KBits =  $release_a+$release_b+$release_c;
+let p_AllBits_att = $x+$y+$z+$a+$b+$c;
+let p_PBits_att = $x+$y+$z;
+let p_KBits_att = $a+$b+$c;
+let p_AllBits_dir =  $up+$down+$left+$right;
+
+#These represent how many frames you have to do the next part of an input
+#F||example, if you start with D a given motion will begin their countdown based 
+#on the values defined below, f||"qc" that is 12 frames of time you have to input DF
+#then you have 12 additional frames to input F to complete the QCF motion.
+#ONLY CHANGE THESE IF YOU UNDERSTAND THIS
+map(sntimer):=40;
+
+let iLag = 0;			#additional input lag (in frames)
+#=======================================#
+#Command Buffering File based on (Capcom VS. SNK 2) 1.8                        #
+#Original system f||Capcom VS. SNK: Collision Course                          #
+#by Vans                                                                       #
+#Modifications by Jesuszilla f||Command interpretation                        #
+#Adaptation by Kamekaze f||Ikemen GO, updates by Jesuszilla f||improved bit  #
+#usage                                                                         #
+#=======================================#
+#Introduction:
+#This is the 15-tick / 2-tick based command buffering system. Coded to be Capcom
+#compliant following Capcom vs. SNK 2 as a guide.
+#
+#The helper is capable of providing buffering as well as PERFECT reversed
+#commands in addition to negative edge checking f||command var iables.
+#
+#Any and all editions should be done in the BUFFER DEFINITION section.
+#
+#Unless you plan to modify the whole system, do not touch the mapnames, ever.
+
+
+
+#----------------------------[BUFFER DECREASE]---------------------------------#
+# The button and cardinal direction buffers are special in that they do not use
+# normal integer subtraction f||each buffer. That is because it would make the
+# code ugly and unreadable. Thus, it uses bitwise shifting through division due
+# to I.K.E.M.E.N. GO's lack of bitwise shift operators.
+#
+# Think of each button and direction as an enumeration flag. When initializing
+# (when a button is first pressed), it initializes the most significant bits.
+# The buffer decreases by shifting the entire array down to the next size of
+# bits. There are 7 buttons, so 7 bits are used. Therefore, up to 4 ticks of
+# button buffering can be stored in one var in this architecture. Directions
+# only require 4 bits because there are only 4 directions. Therefore, the
+# direction arrays can store up to 8 ticks of buffering.
+#
+# In either case, however, the Capcom vs. SNK 2 buffering system used here only
+# uses 2 ticks of buffering.
+#
+# suppose a user presses LP and LK at the same time. The basic bit array in this
+# structure would look as follows:
+#
+# 0010001
+#
+# Going from least significant bit (the rightmost bit) to the most significant
+# bit (the leftmost bit), the bits that are filled f||LP and LK are the 1st
+# and 5th bits, respectively.
+#
+# so f||the buffering system defined in this file, the variable would actually
+# look as follows f||the first tick. Recall that I.K.E.M.E.N. GO int variables are
+# 32 bits:
+#
+# 00000000000000000000100010000000
+#
+# The next tick, this array of 7 bits would be shifted down to the next 7 bits.
+# In I.K.E.M.E.N. GO, this is accomplished by dividing the number by 128. Thus, the
+# bits in the variable would look as follows on the second tick:
+#
+# 00000000000000000000000000010001
+#
+# 00000000000000000100000000000000
+# 00000000000000000100000000000000
+#
+# This algorithm is the same f||every variable used f||buffering. However,
+# each variable used in this system serves a specific purpose:
+#
+# Map(p_att) - Used to signify button presses.
+# Map(h_dir) - Used to signify button holds.
+# Map(r_att) - Used to signify button releases.
+# Map(p_dir) - Used to signify direction presses.
+# Map(h_dir) - Used to signify direction holds.
+# Map(r_dir) - Used to signify direction releases.
+#
+# A command f||Map(p_att) ||Map(p_dir) is like a raw button, such as x ||F. Similarly,
+# Map(h_att) and Map(h_dir) can be used f||hold behavior, like /x ||/F. Finally, Map(r_att)
+# and Map(r_dir) are used f||release behavior, like ~x ||~F. These are all
+# necessary in order to overcome I.K.E.M.E.N. GO's limitations to provide a more solid
+# command system.
+#
+# If you don't understand this explanation, that is OK. CNS may be your first,
+# ||only, computer language, and this system is built upon years of expertise
+# in computer science. You can read up on bitwise operations here. I hope these
+# links survive time!
+#
+# English:
+# http://mugenguild.com/forum/topics/bitwise-variables-demystified-137076.0.html
+# https://en.wikipedia.org/wiki/Bitwise_operation
+#
+# 日本語:
+# https://ja.wikipedia.org/wiki/%E3%83%93%E3%83%83%E3%83%88%E6%BC%94%E7%AE%97
+#
+#--------------------------------[BUTTONS]-------------------------------------#
+#BUTTON:
+#Map(p_att) = PRESS
+#Map(h_dir) = HOLD
+#Map(r_att) = RELEASE
+#Final tick (pattern repeats going up, can store 4 ticks):
+# LP    = 0x01
+# MP    = 0x02
+# HP    = 0x04
+# start = 0x08
+# LK    = 0x10
+# MK    = 0x20
+# HK    = 0x40
+
+
+#--------------------------------[BUTTONS]-------------------------------------#
+#BUTTON:
+#Map(p_att) = PRESS
+#Map(h_dir) = HOLD
+#Map(r_att) = RELEASE
+#Final tick (pattern repeats going up, can store 4 ticks):
+# LP    = 0x01
+# MP    = 0x02
+# HP    = 0x04
+# start = 0x08
+# LK    = 0x10
+# MK    = 0x20
+# HK    = 0x40
+
+
+
+
+
+
+
+
+
+#DIRECTIONAL:
+#var(i22) = DD
+#Map(tw_i66) = FF
+#Map(tw_i44) = BB
+##endregion
+
+#----------------------------------[COMMANDS]----------------------------------#
+#Map(i236)  = QCF
+#Map(i623)  = DP
+#Map(i421)  = rDP
+#Map(i214)  = QCB
+#Map(i41236)  = HCB
+#Map(i63214)  = HCF
+#Map(i46)  = CB,F
+#Map(i64)  = CF,B
+#Map(i28)  = CD,U
+#Map(i236236)  = QCFx2
+#Map(i214214)  = QCBx2
+
+
+
+##region cvs2_buffer_init.vns
+#--------------------------[BUFFER DEFINITION]---------------------------------#
+
+#----------------------------[BUTTON BUFFER]-----------------------------------#
+#Leave the BUTTON BUFFER alone f||compatibility.
+#BUTTON:
+#Map(p_att) = PRESS
+#Map(h_dir) = HOLD
+#Map(r_att) = RELEASE
+#Final tick (pattern repeats going up, can store 4 ticks):
+# 1 - LP
+# 2 - MP
+# 4 - HP
+# 8 - Start
+#16 - LK
+#32 - MK
+#64 - HK
+#DIRECTIONAL:
+#Map(p_dir) = PRESS
+#Map(h_dir) = HOLD
+#Map(r_dir) = RELEASE
+#Final tick (pattern repeats going up, can store 8 ticks):
+# 1 - U
+# 2 - D
+# 4 - B
+# 8 - F
+
+
+
+
+
+if !map(playback){
+call checkbtn(map(player),$s,$x,$y,$z,$w,$a,$b,$c,$d,$release_Start,$release_x,$release_y,$release_z,$release_w,$release_a,$release_b,$release_c,$release_d);
+call checkdir(map(player),$up,$down,$left,$right,$release_Up,$release_Down,$release_Left,$release_Right);
+}
+else
+{
+map(h_dir):=root,map(h_dir);
+map(p_dir):=root,map(p_dir);
+map(h_att):=root,map(h_att);
+map(p_att):=root,map(p_att);
+map(m_att):=root,map(m_att);
+
+call replayReleaseCheck($s,$x,$y,$z,$w,$a,$b,$c,$d,$release_Start,$release_x,$release_y,$release_z,$release_w,$release_a,$release_b,$release_c,$release_d,$up,$down,$left,$right,$release_Up,$release_Down,$release_Left,$release_Right);
+
+}
+
+
+
+
+##endregion
+
+
+call checkHHS();
+#=====Charge Buffer
+call setcharge();
+
+
+#map buttons
+ if!Map(menu){
+
+#-------|Hundred Hand Slap logic|-----
+
+ if !root,Map(tw_LockInput){
+#map directions
+call setdir($up,$down,$left,$right,$release_Up,$release_Down,$release_Left,$release_Right);
+call setbtn($s,$x,$y,$z,$w,$a,$b,$c,$d,$release_Start,$release_x,$release_y,$release_z,$release_w,$release_a,$release_b,$release_c,$release_d);
+}
+
+}
+
+
+
+
+}
+
+[Statedef 9992999; type:S;movetype:A;physics :N;ctrl:0;sprpriority:-1;anim:-2;]
+ignorehitpause{
+attackdist{value:0}
+if teamside=1
+{
+let ap = cond(player(1),standby&&root,numpartner=1,cond(player(1),standby&&player(3),standby&&root,numpartner=2,cond(player(5),standby&&player(3),standby&&player(1),standby&&root,numpartner=3,7,5),3),1);
+if teammode=simul
+{
+let ap =cond(player(1),id=root,id,1,cond(player(3),id=root,id,3,cond(player(5),id=root,id,5,7)));
+}
+}
+else
+{
+let ap = cond(player(2),standby&&root,numpartner=1,cond(player(2),standby&&player(4),standby&&root,numpartner=2,cond(player(6),standby&&player(4),standby&&player(2),standby&&root,numpartner=3,8,6),4),2);
+if teammode=simul
+{
+let ap =cond(player(2),id=root,id,2,cond(player(4),id=root,id,4,cond(player(6),id=root,id,6,8)));
+}
+}
+
+posset{x:player($ap),pos x;y:500}
+assertspecial{flag:invisible}
+}
+
+if facing=1 && root,Map(tw_r_time)
+{
+turn{}
+}
+
+if facing=-1 && !root,Map(tw_r_time)
+{
+turn{}
+}

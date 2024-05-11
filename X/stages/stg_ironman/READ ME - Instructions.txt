@@ -1,0 +1,40 @@
+
+"STARK Enterprises Space Station" Iron-Man Stage
+Version 2.0
+For MUGEN 1.1 and IKEMEN-GO Systems
+
+Created by "JC"
+Edited for MUGEN 1.1 and IKEMEN-GO by "Tiger-Boy"
+
+-When any char reaches low health, the music will change to the 'Hurry-Up!' version.
+
+This stage was edited for use with 1600x900 resolution.
+If your system has a different resolution, some adjustments might be necessary.
+
+This stage was originally released with the following:
+-Animation(s)
+-Parallax
+-Zoom Effects
+-High Jump
+
+Updates:
+-Added 'fade-range' to the Shadow effect
+-Added Loop Music
+-Added 'Hurry-Up' music with Loop
+-Added Stage portrait
+
+Instructions:
+1-Add the 'msh-ironman' folder to your 'stages' folder.
+2-If you want the stage with regular 'Loop' music, add the following to the 'select' file (MUGEN1.1 and IKEMEN-Go): 
+  stages/msh-ironman/msh-ironman.def
+ -If you want the stage with the 'Hurry-Up' music, add the following to the 'select' file (IKEMEN-Go Only): 
+  stages/msh-ironman/msh-ironman-HU.def
+3-Save file and play
+
+This is a 'Self-Sustained' stage. There is no need to move anything from the folder.
+
+Constructive Feedback is always Welcome.
+If you have any advise or ideas to make this stage better, 
+or if there are any issues, please let me know.  
+
+[~TB~]

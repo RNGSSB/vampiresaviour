@@ -1,0 +1,44 @@
+; Definition file for Kung Fu Man
+; Contains all the filenames needed for the character
+
+; Player information
+[Info]
+name = "Wolverine"        ;Name of character
+displayname = "Wolverine" ;Name of character to display
+versiondate = 09,30,2009    ;Version date of character (MM-DD-YYYY or X.XX)
+mugenversion = 1.0          ;Version of M.U.G.E.N character works on (X.XX)
+author = "Elecbyte"         ;Character author name
+pal.defaults = 1,2,3,4      ;Default palettes in order of preference (up to 4)
+                            ;Numbering starts from 1
+localcoord = 320,240        ;Local coordinate space width and height
+
+; Files for the player
+[Files]
+cmd     = Wolverine.cmd           ;Command set
+cns     = Wolverine.const           ;Constants
+st      = Wolverine.zss           ;States
+st2 = hits.zss
+st3 = command.zss
+st4 = AI.zss
+stcommon = common1.cns.zss      ;Common states (from data/ or motif)
+sprite  = Wolverine.sff           ;Sprite
+anim    = Wolverine.air           ;Animation
+sound   = Wolverine.snd           ;Sound
+ai      = Wolverine.ai            ;AI hints data (not used)
+movelist = movelist.dat     ;Ikemen feature: Movelist
+pal1     = PALETTES/Wolverine_01.act
+pal2     = PALETTES/Wolverine_02.act
+pal3     = PALETTES/Wolverine_03.act
+pal4     = PALETTES/Wolverine_04.act
+pal5     = PALETTES/Wolverine_05.act
+pal6     = PALETTES/Wolverine_06.act
+
+; Arcade mode
+[Arcade]
+intro.storyboard = intro.def
+ending.storyboard = ending.def
+
+[Map]
+Gravity = 0.35
+DefenseMul = 1.27
+Guts = 4

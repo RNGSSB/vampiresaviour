@@ -206,7 +206,7 @@ if Map(z) && command = "holddown"
 }
 
 #-------------------------------------------------------------------------------
-#2H
+#2S
 if Map(a) && command = "holddown" 
 && (stateType = C && ctrl || stateNo = 100)  {
 	changeState{value: 450}
