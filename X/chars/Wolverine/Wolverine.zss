@@ -652,6 +652,7 @@ if time = 0{
 	mapSet{map: "attackSoundIndex"; value: 5}
 	mapSet{map: "guardSoundGroup"; value: 6}
 	mapSet{map: "guardSoundIndex"; value: 5}
+	call SetAttackLaunchSpeed(-2, -4, -2, -4);
 }
 
 if time = 2 {
