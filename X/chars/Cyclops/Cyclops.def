@@ -1,0 +1,44 @@
+; Definition file for Kung Fu Man
+; Contains all the filenames needed for the character
+
+; Player information
+[Info]
+name = "Cyclops"        ;Name of character
+displayname = "Cyclops" ;Name of character to display
+versiondate = 09,30,2009    ;Version date of character (MM-DD-YYYY or X.XX)
+mugenversion = 1.0          ;Version of M.U.G.E.N character works on (X.XX)
+author = "Elecbyte"         ;Character author name
+pal.defaults = 1,2,3,4      ;Default palettes in order of preference (up to 4)
+                            ;Numbering starts from 1
+localcoord = 320,240        ;Local coordinate space width and height
+
+; Files for the player
+[Files]
+cmd     = Cyclops.cmd           ;Command set
+cns     = Cyclops.const           ;Constants
+st      = Cyclops.zss           ;States
+st2 = hits.zss
+st3 = command.zss
+st4 = AI.zss
+stcommon = common1.cns.zss      ;Common states (from data/ or motif)
+sprite  = Cyclops.sff           ;Sprite
+anim    = Cyclops.air           ;Animation
+sound   = Cyclops.snd           ;Sound
+ai      = Cyclops.ai            ;AI hints data (not used)
+movelist = movelist.dat     ;Ikemen feature: Movelist
+pal1     = PALETTES/Cyclops_01.act
+pal2     = PALETTES/Cyclops_02.act
+pal3     = PALETTES/Cyclops_03.act
+pal4     = PALETTES/Cyclops_04.act
+pal5     = PALETTES/Cyclops_05.act
+pal6     = PALETTES/Cyclops_06.act
+
+; Arcade mode
+[Arcade]
+intro.storyboard = intro.def
+ending.storyboard = ending.def
+
+[Map]
+Gravity = 0.45
+DefenseMul = 1
+Guts = 2

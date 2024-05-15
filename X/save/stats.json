@@ -2,7 +2,29 @@
   "modes": {
     "training": {
       "playtime": 0
+    },
+    "arcade": {
+      "playtime": 85.23,
+      "clear": 1,
+      "clearcount": {
+        "wolverine": 1
+      },
+      "ranking": [
+        {
+          "score": 118700,
+          "time": 85.23,
+          "name": "AAA",
+          "chars": [
+            "wolverine"
+          ],
+          "tmode": 0,
+          "ailevel": 5,
+          "win": 2,
+          "lose": 0,
+          "consecutive": 2
+        }
+      ]
     }
   },
-  "playtime": 0
+  "playtime": 85.23
 }

@@ -174,10 +174,18 @@ if command = "y" && command != "holddown" && command != "holdfwd" &&
 
 #-------------------------------------------------------------------------------
 #Stand Light Kick
-if command = "a" &&Command != "holddown" &&
+if command = "a" &&Command != "holddown" && Command != "holdfwd" &&
 	((stateType = S && (ctrl || stateNo = 100)) ||
 		((stateNo = 230 || stateNo = 430) && moveContact)) {
 	changeState{value: 230}
+}
+
+#-------------------------------------------------------------------------------
+#Stand Light Kick Forward
+if command = "a" && Command != "holddown" && Command = "holdfwd" &&
+	((stateType = S && (ctrl || stateNo = 100)) ||
+		((stateNo = 230 || stateNo = 430 || stateNo = 215 || stateNo = 200 || stateNo = 400) && moveContact)) {
+	changeState{value: 235}
 }
 
 #-------------------------------------------------------------------------------

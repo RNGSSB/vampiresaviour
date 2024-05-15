@@ -864,6 +864,90 @@ if moveHit{
 call EndState(0);
 
 #===============================================================================
+# Standing light kick
+#===============================================================================
+# ZSS difficulty: easy
+[StateDef 235;
+type: S; movetype: A; physics: S;
+ poweradd: 11; ctrl: 0;
+ anim: 215;
+sprpriority: 2;]
+
+
+if time = 0{
+	call AttackLevel2();
+	call Init5C();
+}
+
+if time > 0{
+call JumpCancel();
+}
+
+if time = 2 {
+	call CSnd(0, 0, 1);
+}
+
+if animElem = 2{
+	velSet{x: 2; y: -7.4}
+	StateTypeSet{statetype: A; physics: A}
+}
+
+IgnoreHitPause{
+	if HitPauseTime = map(hitStop) {
+			EnvShake{time: map(hitStop); freq: map(screenShakeSpeed);}
+	}
+}
+
+if time = 0 {
+	hitDef{
+		attr: S, NA;                 
+		damage: ((map(attackDamage) * map(DamageScaling)) * enemy,map(DefenseMul)) * enemy, map(GutsScaling), map(chipDamage);               
+		animtype: Light;             
+		guardflag: H;        
+		hitflag: MAF;             
+		priority: map(hitPriority), Hit;                     
+		pausetime: map(hitStop), map(hitStop);             
+		sparkno: map(hitSparkNum);                   
+		sparkxy: map(sparkPosX), map(sparkPosY);                                           
+		hitsound: map(attackSoundGroup), map(attackSoundIndex);               
+		guardsound: map(guardSoundGroup), map(guardSoundIndex);             
+		ground.type: Low;                   
+		ground.hittime: map(hitStunAmount);  
+		air.hittime: map(untechTime); 
+		guard.hittime: map(blockStunAmount);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY); 
+		ground.slidetime: map(hitSlideTime);
+		ground.velocity: map(groundPushbackX), map(groundPushbackY);
+		air.velocity: map(airPushbackX), map(airPushbackY);
+		guard.velocity: map(groundGuardPushbackX);
+		guard.slidetime: map(guardSlideTime);
+		airguard.velocity: map(airGuardPushbackX), map(airGuardPushbackY); 
+		air.type: High;  
+		fall: map(hardKnockDown);
+		fall.recover: map(hardKnockDownRecover);
+		kill: map(AttackKill);
+		guard.kill: map(GuardKill); yaccel: map(comboGravity);
+	}
+}
+
+if moveHit{
+	persistent(0){
+		ignoreHitPause{
+			call DamageScaling(0.8);
+		}
+	}
+}
+
+if animElem = 7{
+	StateTypeSet{physics: N}
+}
+ 
+#Change to stand state when done 
+if vel y > 0 && pos y >= 0 {
+	call SetAttackLandingLag(7);
+}
+
+#===============================================================================
 # Standing strong kick
 #===============================================================================
 # ZSS difficulty: easy
@@ -1278,7 +1362,7 @@ if animElem = 2 {
 		attr: A, NA;                 
 		damage: ((map(attackDamage) * map(DamageScaling)) * enemy,map(DefenseMul)) * enemy, map(GutsScaling), map(chipDamage);               
 		animtype: light;             
-		guardflag: H;        
+		guardflag: HA;        
 		hitflag: MAF;            
 		priority: map(hitPriority), Hit;                     
 		pausetime: map(hitStop), map(hitStop);             
@@ -1357,7 +1441,7 @@ if animElem = 3 {
 		attr: A, NA;                 
 		damage: ((map(attackDamage) * map(DamageScaling)) * enemy,map(DefenseMul)) * enemy, map(GutsScaling), map(chipDamage);               
 		animtype: hard;             
-		guardflag: H;        
+		guardflag: HA;        
 		hitflag: MAF;           
 		priority: map(hitPriority), Hit;                     
 		pausetime: map(hitStop), map(hitStop);             
@@ -1430,7 +1514,7 @@ if animElem = 2 {
 		attr: A, NA;                 
 		damage: ((map(attackDamage) * map(DamageScaling)) * enemy,map(DefenseMul)) * enemy, map(GutsScaling), map(chipDamage);               
 		animtype: Light;             
-		guardflag: H;        
+		guardflag: HA;        
 		hitflag: MAF;            
 		priority: map(hitPriority), Hit;                     
 		pausetime: map(hitStop), map(hitStop);             
@@ -1508,7 +1592,7 @@ if time = 0 {
 		attr: A, NA;                 
 		damage: ((map(attackDamage) * map(DamageScaling)) * enemy,map(DefenseMul)) * enemy, map(GutsScaling), map(chipDamage);               
 		animtype: Light;             
-		guardflag: H;        
+		guardflag: HA;        
 		hitflag: MAF;            
 		priority: map(hitPriority), Hit;                     
 		pausetime: map(hitStop), map(hitStop);             
@@ -1598,7 +1682,7 @@ if animElem = 2 {
 		attr: A, NA;                 
 		damage: ((map(attackDamage) * map(DamageScaling)) * enemy,map(DefenseMul)) * enemy, map(GutsScaling), map(chipDamage);               
 		animtype: hard;             
-		guardflag: H;        
+		guardflag: HA;        
 		hitflag: MAF;             
 		priority: map(hitPriority), Hit;                     
 		pausetime: map(hitStop), map(hitStop);             

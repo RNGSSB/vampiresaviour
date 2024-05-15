@@ -39,6 +39,6 @@ intro.storyboard = intro.def
 ending.storyboard = ending.def
 
 [Map]
-Gravity = 0.35
+Gravity = 0.45
 DefenseMul = 1.27
 Guts = 4

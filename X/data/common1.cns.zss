@@ -1248,8 +1248,8 @@ if p2MoveType != H
 
 
 #Combo Gravity System		
-if map(comboCount) > map(gravityFreeHits){
-MapSet{map:"comboGravity"; value: enemy,map(Gravity) + ((map(comboCount) - 3) * 0.02)}
+if map(comboCount) > 1{
+MapSet{map:"comboGravity"; value: enemy,map(Gravity) + ((map(comboCount) - 3) * 0.03)}
 }
 
 IgnoreHitPause{
