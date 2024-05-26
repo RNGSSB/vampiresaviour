@@ -80,6 +80,13 @@ time = 1
 buffer.time = 1
 
 [Command]
+name = "xa"
+command = xa
+time = 1
+buffer.time = 1
+
+
+[Command]
 name = "c"
 command = c
 time = 1
@@ -211,3 +218,8 @@ time = 1
 name = "release_upback"
 command = ~UB
 time = 1
+
+[Command]
+name = "DU"
+command = D,U
+time = 30

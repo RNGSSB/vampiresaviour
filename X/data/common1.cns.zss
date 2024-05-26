@@ -17,7 +17,22 @@
 # Functions can only call predefined functions, so recursion is not possible.
 # In case of repeated function names, the first loaded one overrides others.
 # for/while loops (with break and continue) and switch statements are supported.
+[Function SuperJumpInstall()]
+#if command = "holdup" && vel y > 0 {
+#	velAdd{y: -const(movement.yAccel) + 0.23}
+#}
 
+#if command = "holddown" {
+#	velAdd{y: const(movement.yAccel) + 0.01}
+#}
+
+if command = "holdfwd" && vel X < const(velocity.runjump.fwd.x) * 0.7{
+	velAdd{x: 0.45}
+}
+
+if command = "holdback" && vel X > const(velocity.runjump.fwd.x) * -0.7 {
+	velAdd{x: -0.45}
+}
 #-------------------------------------------------------------------------------
 # Stand
 [StateDef 0; type: S; physics: S; sprpriority: 0;]
@@ -174,7 +189,7 @@ if time = 2 {
 		let x = const(velocity.airjump.back.x);
 	}
 	velSet{x: $x; y: const(velocity.airjump.y)}
-	changeState{value: 50; ctrl: 1}
+	changeState{value: 55; ctrl: 1}
 }
 
 #-------------------------------------------------------------------------------
@@ -187,6 +202,23 @@ if time = 0 {
 }
 persistent(0) if vel y > const240p(-2) && selfAnimExist(anim + 3) && anim = [41, 43] {
 	changeAnim{value: anim + 3}
+}
+
+#-------------------------------------------------------------------------------
+# Double Jump Up
+[StateDef 55; type: A; physics: A;]
+
+if time = 0 {
+	sysVar(1) := 0;
+	changeAnim{value: cond(vel x = 0, 41, ifElse(vel x > 0, 42, 43))}
+}
+persistent(0) if vel y > const240p(-2) && anim = [41, 43] {
+	changeAnim{value: 44}
+}
+
+if p2dist x < -5
+{
+	Turn{}
 }
 
 #-------------------------------------------------------------------------------
@@ -213,13 +245,73 @@ if animTime = 0 {
 }
 
 #-------------------------------------------------------------------------------
+# Super Jump
+[StateDef 53; type: A; moveType: I; physics: N; anim: 40; velSet: 0,0; ctrl: 0;]
+
+if command = "holdfwd" {
+	sysVar(1) := 1;
+}
+
+if command = "holdback" {
+	sysVar(1) := -1;
+}
+
+if time = 2{
+	playSnd{value: F12,3}
+}
+
+if animtime = 0 {
+if sysVar(1) = 0 {
+		let x = const(velocity.jump.neu.x);
+	} else if sysVar(1) = 1 {
+		if prevStateNo = 100 {
+			let x = const(velocity.runjump.fwd.x);
+		} else {
+			let x = const(velocity.jump.fwd.x);
+		}
+	} else {
+		let x = const(velocity.jump.back.x);
+	}
+	
+	velSet{x: $x * 1.4; y: const(velocity.jump.y)*1.25}
+	
+	changeState{value: 54; ctrl: 1}
+}
+
+#-------------------------------------------------------------------------------
+# Super Jump Up
+[StateDef 54; type: A; physics: A;]
+
+if time = 0 {
+	var(22) := 1;
+	sysVar(1) := 0;
+	changeAnim{value: cond(vel x = 0, 41, ifElse(vel x > 0, 42, 43))}
+}
+persistent(0) if vel y > const240p(-2) && anim = [41, 43] {
+	changeAnim{value: 44}
+}
+
+
+
+if var(22) = 1{
+	call SuperJumpInstall();
+}
+
+if p2dist x < -5
+{
+	Turn{}
+}
+
+
+#-------------------------------------------------------------------------------
 # Run forward
 [StateDef 100; type: S; physics: S; anim: 100; sprpriority: 1; ctrl: 0;]
 if time = 0{
 PlaySnd{value: 1,5}
 }
 
-if command = "holdup"{
+
+if command = "holdup" && command != "DU" {
 changeState{value: 40;}
 }
 
@@ -581,8 +673,7 @@ if (time = 0 && (getHitVar(yVel) || getHitVar(fall))) || pos y != 0 {
 	stateTypeSet{statetype: A}
 }
 
-#velset{x: -0.85 * -map(DIdirX)}
-#velset{y: -0.85 * map(DIdirY)}
+velset{x: -0.85 * -map(DIdirX)}
 
 if pos y != 0{
 	changeState{value: 5020}
@@ -616,8 +707,8 @@ if (time = 0 && (getHitVar(yVel) || getHitVar(fall))) || pos y != 0 {
 	stateTypeSet{statetype: A}
 }
 
-#velset{x: -0.85 * -map(DIdirX)}
-#velset{y: -0.85 * map(DIdirY)}
+velset{x: -0.85 * -map(DIdirX)}
+
 
 if pos y != 0{
 	changeState{value: 5020}
@@ -649,8 +740,8 @@ if hitShakeOver {
 	changeState{value: 5030}
 }
 
-#velset{x: -0.85 * -map(DIdirX)}
-#velset{y: -0.85 * map(DIdirY)}
+velset{x: -0.85 * -map(DIdirX)}
+velset{y: -0.85 * map(DIdirY)}
 
 if anim = 5000 || anim = 5010 {
 	forceFeedback{time: 6; waveform: square}
@@ -671,6 +762,14 @@ if time = 0 {
 	hitVelSet{x: 1; y: 1}
 } else {
 	velAdd{y: getHitVar(yAccel)}
+}
+
+if command = "holdfwd" && vel X < const(velocity.runjump.fwd.x) * 0.6{
+	velAdd{x: 0.45}
+}
+
+if command = "holdback" && vel X > const(velocity.runjump.fwd.x) * -0.6 {
+	velAdd{x: -0.45}
 }
 
 if time = 1 {
@@ -695,6 +794,15 @@ if animTime = 0 {
 if time = 0 && selfAnimExist(5035) && anim != [5051, 5059] && anim != 5090 {
 	changeAnim{value: 5035}
 }
+
+if command = "holdfwd" && vel X < const(velocity.runjump.fwd.x) * 0.6{
+	velAdd{x: 0.45}
+}
+
+if command = "holdback" && vel X > const(velocity.runjump.fwd.x) * -0.6 {
+	velAdd{x: -0.45}
+}
+
 if time > 0 {
 	velAdd{y: getHitVar(yAccel)}
 }
@@ -714,6 +822,14 @@ if hitOver || animTime = 0 ||
 
 if !alive {
 	changeState{value: 5050; ctrl: 0}
+}
+
+if command = "holdfwd" && vel X < const(velocity.runjump.fwd.x) * 0.6{
+	velAdd{x: 0.45}
+}
+
+if command = "holdback" && vel X > const(velocity.runjump.fwd.x) * -0.6 {
+	velAdd{x: -0.45}
 }
 
 if time = 10{
@@ -736,7 +852,16 @@ changeAnim{value: 5050}
 #}
 
 if vel y > 0 && pos y >= 0 {
-	changeState{value: 52}
+	if command != "holdfwd" && command != "holdback"{
+		changeState{value: 5220}
+	}
+	if command = "holdfwd" && command != "holdback"{
+		changeState{value: 5250}
+	}
+	if command != "holdfwd" && command = "holdback"{
+		changeState{value: 5260}
+	}
+	
 }
 #-------------------------------------------------------------------------------
 # Air get-hit (falling)
@@ -1095,6 +1220,149 @@ if vel y > 0 && pos y >= 0 {
 }
 
 #-------------------------------------------------------------------------------
+# Downed get-hit (lying down)
+[StateDef 5220; type: L; movetype: H; physics: N;]
+
+persistent(0) if selfAnimExist(5110 + anim % 10) && anim = [5081, 5089] {
+	changeAnim{value: 5110 + anim % 10}
+}
+if time <= 9{
+	notHitBy{value: SCA; time: 1}
+}
+
+if time = 0 {
+	
+	fallEnvShake{}
+	if anim != [5110, 5119] {
+		let a = call SelfAnimExistAddMod10(anim = [5161, 5169], 5170);
+		changeAnim{value: $a}
+	}
+	hitFallDamage{}
+	posSet{y: 0}
+	if getHitVar(fall.yVel) {
+		sysVar(1) := floor(vel y);
+	}
+	if !sysVar(0) {
+		call HitGroundEffect(sysVar(1));
+	}
+	velSet{y: 0}
+}
+let atEq0OrSv0 = animTime = 0 || sysVar(0);
+if $atEq0OrSv0 {
+	persistent(0) if anim = [5171, 5179] && selfAnimExist(5110 + anim % 10) {
+		changeAnim{value: 5110 + anim % 10}
+	}
+	persistent(0) if anim != [5111, 5119] {
+		changeAnim{value: 5110}
+	}
+}
+if !alive && ($atEq0OrSv0 || anim = [5110, 5119]) {
+	changeState{value: 5150}
+}
+if time = 0 {
+	sysVar(0) := 0;
+}
+velMul{x: .85}
+if abs(vel x) < const(movement.down.friction.threshold) {
+	velSet{x: 0}
+}
+if time = 0 {
+	if alive {
+		forceFeedback{time: 8; ampl: 240; waveform: sine}
+	} else {
+		forceFeedback{time: 30; ampl: 200, 7, -.467; waveform: sine}
+	}
+}
+
+if command != "holddown" && time >= 9 {
+changeState{value: 5240}
+}
+
+if time >= 34 {
+changeState{value: 5240}
+}
+
+if command = "holdfwd" && command != "holdback"{
+		changeState{value: 5250}
+}
+if command != "holdfwd" && command = "holdback"{
+	changeState{value: 5260}
+}
+
+#-------------------------------------------------------------------------------
+# Downed get-hit (getting up)
+[StateDef 5240; type: L; movetype: I; physics: N;]
+
+if time = 0 {
+	let a = call SelfAnimExistAddMod10(anim = [5111, 5119], 5120);
+	changeAnim{value: $a}
+	velSet{x: 0}
+}
+notHitBy{value: SCA; time: 1}
+if animTime = 0 {
+	hitFallSet{value: 1}
+	notHitBy{value: , NT,ST,HT; time: 12}
+	notHitBy{value2: SCA; time: 3}
+	changeState{value: 0; ctrl: 1}
+}
+
+#===============================================================================
+# Tech Roll Forward
+#===============================================================================
+[StateDef 5250;
+type: S; movetype: A; physics: N; ctrl: 0;
+anim: 800; sprpriority: 2;]
+PlayerPush{value: 0}
+if time = 0{
+posSet{y: 0}
+velSet{x: 6}
+velSet{y: 0}
+}
+
+if time <= 24{
+	notHitBy{value: SCA; time: 1}
+}
+
+
+if time >= 28 {
+velSet{x: 0}
+if p2dist x < -10
+{
+	Turn{}
+}
+}
+assertSpecial{flag: noWalk; flag2: noAutoTurn}
+call EndState(0);
+
+#===============================================================================
+# Tech Roll Back
+#===============================================================================
+[StateDef 5260;
+type: S; movetype: A; physics: N; ctrl: 0;
+anim: 810; sprpriority: 2;]
+PlayerPush{value: 0}
+if time = 0{
+posSet{y: 0}
+velSet{x: -6}
+velSet{y: 0}
+}
+
+if time <= 24{
+	notHitBy{value: SCA; time: 1}
+}
+
+if time >= 28 {
+velSet{x: 0}
+if p2dist x < -10
+{
+	Turn{}
+}
+}
+
+assertSpecial{flag: noWalk; flag2: noAutoTurn}
+call EndState(0);
+
+#-------------------------------------------------------------------------------
 # Continue screen animation
 [StateDef 5500; type: S; ctrl: 0; anim: 5300; velset: 0, 0;]
 
@@ -1246,10 +1514,14 @@ if p2MoveType != H
 	MapSet{map:"comboGravity"; value: enemy,map(Gravity)}
 }
 
+MapSet{map: "DamageScalingMax"; value: 0.2}
+
+MapSet{map: "damageScalingPerHit"; value: -0.1}
+
 
 #Combo Gravity System		
 if map(comboCount) > 1{
-MapSet{map:"comboGravity"; value: enemy,map(Gravity) + ((map(comboCount) - 3) * 0.03)}
+MapSet{map:"comboGravity"; value: enemy,map(Gravity) + ((map(comboCount) - 3) * 0.06)}
 }
 
 IgnoreHitPause{

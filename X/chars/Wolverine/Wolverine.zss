@@ -1723,6 +1723,101 @@ if animTime = 0{
 	ctrlSet{value: 1}
 }
 
+#===============================================================================
+# Grab
+#===============================================================================
+[StateDef 800;
+type: S; movetype: A; physics: S;
+ ctrl: 0;
+anim: 900; sprpriority: 2;]
+
+if time = 0 {
+	if p2stateno = 800{
+		hitDef{
+			attr: S, NT;          #Attributes: Standing, Normal Throw
+			hitflag: M-;          #Affect only ground people who are not being hit
+			priority: 1, Miss;    #Throw has low priority, must be miss or dodge type.
+			sparkno: -1;          #No spark
+			p1sprpriority: 1;     #Draw p1's sprite in front of p2
+								  #p2's sprite priority is set to 0 by default
+			p1facing: 1;
+			p2facing: 1;          #Force p2 to face KFM
+			p1stateno: 840;       #On success, KFM changes to state 810
+			p2stateno: 840;       #If hit, p2 changes to state 820 in KFM's ZSS
+			guard.dist: 0;        #This prevents p2 from going into a guard state if close
+			fall: 1;              #Force p2 into falling down
+		}
+	}else{
+		hitDef{
+			attr: S, NT;          #Attributes: Standing, Normal Throw
+			hitflag: M-;          #Affect only ground people who are not being hit
+			priority: 1, Miss;    #Throw has low priority, must be miss or dodge type.
+			sparkno: -1;          #No spark
+			p1sprpriority: 1;     #Draw p1's sprite in front of p2
+								  #p2's sprite priority is set to 0 by default
+			p1facing: 1;
+			p2facing: 1;          #Force p2 to face KFM
+			p1stateno: 805;       #On success, KFM changes to state 810
+			p2stateno: 806;       #If hit, p2 changes to state 820 in KFM's ZSS
+			guard.dist: 0;        #This prevents p2 from going into a guard state if close
+			fall: 1;              #Force p2 into falling down
+		}
+	}
+	
+}
+
+call EndState(0);
+
+#===============================================================================
+# Kung Fu Throw - Holding Opponent
+#===============================================================================
+[StateDef 805;
+type: S; movetype: A; physics: N;
+anim: 902; poweradd: 0; velset: 0, 0;]
+
+if animElem = 2 {
+	call CSnd(1, 1, 1);
+}
+
+if animElem = 7 {
+	call CSnd(800, 0, 1);
+}
+
+if time >= 0{
+targetBind{pos: 30, 0}
+}
+
+if p2stateno = 840 {
+	changeState{value: 840}
+}
+
+if command = "back" && time > 10 {
+	targetState{value: 822}
+	changeState{value: 811}
+}
+
+if command = "fwd" && time > 10 {
+	targetState{value: 820}
+	changeState{value: 810}
+}
+
+if time > 60{
+targetState{value: 840}
+changeState{value: 840}
+}
+
+#===============================================================================
+# Throw Tech
+#===============================================================================
+[StateDef 840;
+type: S; movetype: A; physics: S;
+anim: 198; poweradd: 0; velset: -7, 0;]
+
+
+if animTime = 0{
+selfState{value: 0; ctrl: 1;}
+}
+
 
 #===============================================================================
 # Override common states (use same number to override):

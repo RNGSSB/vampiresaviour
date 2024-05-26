@@ -23,8 +23,8 @@ verticalfollow = .9
 	tensionhigh=85 ;;t_hi
 	tensionlow=25
 	startzoom=1
-	zoomout=0.80 ;;c_zo
-	zoomin=0.90 ;;c_zi
+	zoomout=0.70 ;;c_zo
+	zoomin=0.80 ;;c_zi
 	;;--- * v1.1 (zoom) *---
 
 [PlayerInfo]
